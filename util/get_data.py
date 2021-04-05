@@ -44,17 +44,17 @@ def extract_file(source, destination):
             try:
                 zip_ref.extract(file, path=destination)
             except:
-                print(f"BAD FILE: {file.filename}")
+                print(f"\nBAD FILE: {file.filename}\n")
 
 
 def download(files):
     downloaded_files = []
-    print("DOWNLOADING FILES \n")
+    print("\nDOWNLOADING FILES\n")
     for fs in files:
         file_id = fs['id']
         file_name = fs['name']
         file_path = f"{DOWNLOAD}/{file_name}"
-        print(f'Name:{file_name}\nPath: {file_path}')
+        print(f'\nName:{file_name}\nPath: {file_path}\n')
         if(not os.path.exists(file_path)):
             download_file(file_id, file_path)
         downloaded_files.append({"name": file_name, "path": file_path})
@@ -62,7 +62,7 @@ def download(files):
 
 
 def extract(downloaded_files):
-    print("EXTRACTING FILES \n")
+    print("\nEXTRACTING FILES\n")
     extract_paths = []
     for file in downloaded_files:
         file_name=file['name'][:-4]
@@ -75,7 +75,7 @@ def extract(downloaded_files):
 
 
 def get_nii_files(extracted_paths):
-    print("SELECTING SCANS FILES \n")
+    print("\nSELECTING SCANS FILES \n")
     nii_files = []
     for extract_path in extracted_paths:
         for r, d, f in os.walk(extract_path):
@@ -94,7 +94,7 @@ def get_files(name):
     for file in files:
         downloaded_files = download([file])
         extracted_paths = extract(downloaded_files)
-    #   print(f"REMOVE: {downloaded_files[0]['path']}\n")
+    #   print(f"\nREMOVE: {downloaded_files[0]['path']}\n")
     #   os.remove(downloaded_files[0]['path'])
         nii_files.extend(get_nii_files(extracted_paths))
     store_data(nii_files, f"{PICKLE}/nii_files.pkl")
@@ -110,7 +110,7 @@ def get_assigned_files(name):
             continue
         downloaded_files = download([file])
         extracted_paths = extract(downloaded_files)
-    #   print(f"REMOVE: {downloaded_files[0]['path']}\n")
+    #   print(f"\nREMOVE: {downloaded_files[0]['path']}\n")
     #   os.remove(downloaded_files[0]['path'])
         nii_files.extend(get_nii_files(extracted_paths))
     store_data(nii_files, f"{PICKLE}/nii_files.pkl")
@@ -118,5 +118,5 @@ def get_assigned_files(name):
 
 
 if __name__ == "__main__":
-    print("DOWNLOAD DATA")
+    print("\nDOWNLOAD DATA\n")
     get_assigned_files("filtered_adni")

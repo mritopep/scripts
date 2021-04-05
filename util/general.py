@@ -34,7 +34,7 @@ def remove_dir(dirs):
 
 def update_progress(curr_count,total_count):
     progress = int((curr_count/total_count)*100)
-    print('[{0}] {1}%'.format('#'*(progress/10), progress))
+    print('\n[{0}] {1}%\n'.format('#'*(progress/10), progress))
 
 def lock(data,val):
     if val:
@@ -44,13 +44,13 @@ def lock(data,val):
 
 def show_data(tag,data):
     for num,data in enumerate(data):
-        print(f"{tag}:{num} - {data}")
+        print(f"\n{tag}:{num} - {data}\n")
 
 def list_directory(dir):
     try:
         return os.listdir(dir)
     except:
-        print("NO DIR")
+        print("\nNO DIR\n")
 
 def make_archive(source, destination):
     base = os.path.basename(destination)
@@ -62,7 +62,7 @@ def make_archive(source, destination):
     shutil.move('%s.%s' % (name, format), destination)
 
 def cred_store():
-    print("MENU\n1.Antony\n2.George\n3.Ashia\n4.Harishma\n")
+    print("\nMENU\n1.Antony\n2.George\n3.Ashia\n4.Harishma\n")
     n=input("Please Enter your number:")
     store_data(n,f"{PICKLE}/cred.pkl")
 

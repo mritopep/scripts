@@ -30,7 +30,7 @@ def load_cred(name):
             creds = pickle.load(token)
             return creds
     else:
-        print("token not found")
+        print("\ntoken not found\n")
 
 def match_file_name(file_name,data_name):
     if(file_name.find("metadata")!=-1 and data_name=="adni_metadata"):
@@ -63,14 +63,14 @@ def get_id(creds,name):
     if items:
         for item in items:
             if(match_file_name(item['name'],name)):
-                print(f"NAME: {item['name']}\t ID: {item['id']}")
+                print(f"\nNAME: {item['name']}\t ID: {item['id']}\n")
                 files.append(item)
     else:
         print("-")
     return files
 
 def get_file_ids(name):
-    print("GETTING FILES \n")
+    print("\nGETTING FILES \n")
     files=[]
     for token in TOKENS:
         creds=load_cred(token)

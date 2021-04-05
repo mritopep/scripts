@@ -12,27 +12,27 @@ from util.paths import *
 
 
 def image_registration(mri_image, pet_image, output_image):
-    print("IMAGE REGISTRATION\n")
+    print("\nIMAGE REGISTRATION\n")
     os.system(f"bash {SHELL}/img_rgr.sh {mri_image} {pet_image} {output_image}")
 
 
 def intensity_normalization(input_image, output_image):
-    print("DENOISING\n")
+    print("\nDENOISING\n")
     os.system(f"bash {SHELL}/denoise.sh {input_image} {output_image}")
 
 
 def skull_strip(input_image):
-    print("SKULL STRIPPING\n")
+    print("\nSKULL STRIPPING\n")
     os.system(f"bash {SHELL}/skull_strip.sh {input_image} {SKULL_STRIP}")
 
 
 def bias_correction(input_image, output_image):
-    print("BIAS CORRECTION\n")
+    print("\nBIAS CORRECTION\n")
     os.system(f"bash {SHELL}/bias.sh {input_image} {output_image}")
 
 
 def petpvc(input_image, output_image):
-    print("PETPVC\n")
+    print("\nPETPVC\n")
     os.system(f"bash {SHELL}/petpvc.sh {input_image} {output_image}")
 
 
@@ -121,10 +121,10 @@ def driver_stup():
 
 
 def stub():
-    print("STUB")
+    print("\nSTUB\n")
     driver_stup()
     src_name = dest_name = "sample"
-    print("ZIPPING")
+    print("\nZIPPING\n")
     make_archive(f"{PREPROCESSED}/{src_name}", f"{ZIPPED}/{dest_name}.zip")
 
 
@@ -145,10 +145,10 @@ def process_data():
         extracted_paths = extract([file])
         extracted_files = get_nii_files(extracted_paths)
 
-        print("PREPROCESSING")
+        print("\nPREPROCESSING\n")
         driver(extracted_files, src_name)
 
-        print("ZIPPING")
+        print("\nZIPPING\n")
         make_archive(f"{PREPROCESSED}/{src_name}", f"{ZIPPED}/{dest_name}.zip")
 
         # print("REMOVING")
@@ -156,7 +156,7 @@ def process_data():
 
 
 if __name__ == "__main__":
-    print("PREPROCESSING")
+    print("\nPREPROCESSING SCRIPT\n")
     # Testing
     stub()
     # Process

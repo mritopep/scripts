@@ -7,7 +7,7 @@ from util.paths import *
 from util.general import update_progress,make_dir
 
 def divide(name,path,parts):
-    print("DIVIDING FILES\n\n")
+    print("\nDIVIDING FILES\n")
     divided_dirs=[]
     dirs=[]
 
@@ -33,7 +33,7 @@ def divide(name,path,parts):
         for folder in divide:
             file_count+=1
     
-    print(f"DIR COUNT:{dir_count} FILE COUNT: {file_count}")
+    print(f"\nDIR COUNT:{dir_count} FILE COUNT: {file_count}\n")
 
     count=0
 
