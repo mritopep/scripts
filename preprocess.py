@@ -53,9 +53,9 @@ def preprocess(key, src_name, sub_scan):
     preprocess_mri(mri_path)
     preprocess_pet(f"{IMG_REG}/pet.nii")
 
-    copyfile(f"{TEMP_OUTPUT}mri.nii",
+    copyfile(f"{TEMP_OUTPUT}/mri.nii",
              f"{PREPROCESSED}/{src_name}/{key}/mri.nii")
-    copyfile(f"{TEMP_OUTPUT}pet.nii",
+    copyfile(f"{TEMP_OUTPUT}/pet.nii",
              f"{PREPROCESSED}/{src_name}/{key}/pet.nii")
 
     remove_dir(TEMP_PATHS)
