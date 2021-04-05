@@ -70,7 +70,7 @@ def preprocess_mri(mri_path):
 
 def preprocess_pet(pet_path):
     skull_strip(pet_path)
-    upzip_gz(f"{SKULL_STRIP}/pet_registered_masked.nii.gz",
+    upzip_gz(f"{SKULL_STRIP}/pet_masked.nii.gz",
              f"{SKULL_STRIP}/pet_sk.nii")
     petpvc(f"{SKULL_STRIP}/pet_sk.nii", f"{TEMP_OUTPUT}/pet.nii")
 
