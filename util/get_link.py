@@ -4,13 +4,14 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
+from util.paths import *
+from util.general import store_data
+
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
 
 TOKENS = ["acc1_token.pickle","acc2_token.pickle","acc3_token.pickle","acc4_token.pickle","acc5_token.pickle","acc6_token.pickle","acc7_token.pickle"]
 
 creds = None
-
-PWD = str(os.path.dirname(os.path.abspath(__file__))).replace("/scripts","/tokens")
 
 def login(creds):
     if not creds or not creds.valid:
@@ -18,14 +19,14 @@ def login(creds):
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                f'{PWD}/credentials.json', SCOPES)
+                f'{TOKEN}/credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
-        with open(f'{PWD}/token.pickle', 'wb') as token:
+        with open(f'{TOKEN}/token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
 def load_cred(name):
-    if os.path.exists(f'{PWD}/{name}'):
-        with open(f'{PWD}/{name}', 'rb') as token:
+    if os.path.exists(f'{TOKEN}/{name}'):
+        with open(f'{TOKEN}/{name}', 'rb') as token:
             creds = pickle.load(token)
             return creds
     else:
@@ -78,4 +79,4 @@ def get_file_ids(name):
     return files
     
 if __name__ == '__main__':
-    get_files("preprocessed_adni")
+    get_file_ids("preprocessed_adni")

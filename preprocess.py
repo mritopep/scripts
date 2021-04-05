@@ -6,12 +6,9 @@ import pickle
 import gzip
 
 # import
-from util.get_data import extract_files, get_nii_files
-from util.general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress
+from util.get_data import extract, get_nii_files
+from util.general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress, make_archive
 from util.paths import *
-
-# globals
-sub_scan = {}
 
 
 def image_registration(mri_image, pet_image, output_image):
@@ -43,26 +40,11 @@ def petpvc(input_image, output_image):
         f"bash {SHELL}/petpvc.sh {input_image} {output_image} &> null.txt")
 
 
-def preprocess(key):
-    scan = sub_scan[key]
-    make_dir([SKULL_STRIP, IMG_REG, DENOISE, PETPVC,
-             BAIS_COR, TEMP_OUTPUT, f"{PREPROCESSED}/{key}"])
-    mri_path = scan['mri.nii']
-    pet_path = scan['pet.nii']
-    image_registration(mri_path, pet_path)
-    preprocess_mri(mri_path)
-    preprocess_pet(pet_path)
-    print("COPING FILES\n")
-    copyfile(f"{TEMP_OUTPUT}/mri.nii", f"{PREPROCESSED}/{key}/mri.nii")
-    copyfile(f"{TEMP_OUTPUT}/pet.nii", f"{PREPROCESSED}/{key}/pet.nii")
-    remove_dir([SKULL_STRIP, IMG_REG, DENOISE, PETPVC, BAIS_COR, TEMP_OUTPUT])
-
-
 def preprocess(key, src_name, sub_scan):
     scan = sub_scan[key]
 
     make_dir([SKULL_STRIP, IMG_REG, DENOISE, PETPVC, BAIS_COR,
-             TEMP_OUTPUT, IMG_REG, f"{PREPROCESSED}/{src_name}/{key}"])
+             TEMP_OUTPUT, f"{PREPROCESSED}/{src_name}/{key}"])
 
     mri_path = scan['mri.nii']
     pet_path = scan['pet.nii']
@@ -160,7 +142,7 @@ def process_data():
         dest_name = src_name.replace("filtered", "preprocessed")
         show_data("name", [src_name, dest_name])
 
-        extracted_paths = extract_files([file])
+        extracted_paths = extract([file])
         extracted_files = get_nii_files(extracted_paths)
 
         print("PREPROCESSING")

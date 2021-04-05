@@ -1,29 +1,30 @@
 import os
 
-DATA_PWD = str(os.path.dirname(os.path.abspath(__file__))).replace("/scripts","/data")
-SCRIPT_PWD = str(os.path.dirname(os.path.abspath(__file__)))
+PWD = str(os.path.dirname(os.path.abspath(__file__)))
+DATA = PWD.replace("/scripts/util","/data")
+SCRIPT = PWD.replace("/scripts/util","/scripts")
+TOKEN = PWD.replace("/scripts/util","/tokens")
 
 # Locations
-DOWNLOAD=f'{DATA_PWD}/downloads'
-ADNI=f'{DATA_PWD}/dataset/adni'
-CANCER=f'{DATA_PWD}/dataset/cancer'
-EXTRACT=f'{DATA_PWD}/extracts'
-METADATA_ADNI=f'{DATA_PWD}/metadata/adni'
-METADATA_CANCER=f'{DATA_PWD}/metadata/cancer'
-DIVIDE=f'{DATA_PWD}/parts'
-PREPROCESSED=f'{DATA_PWD}/preprocessed_data'
-ZIPPED=f'{DATA_PWD}/zip_data' 
-PICKLE=f'{DATA_PWD}/pickle'  
+DOWNLOAD=f'{DATA}/downloads'
+ADNI=f'{DATA}/dataset/adni'
+CANCER=f'{DATA}/dataset/cancer'
+EXTRACT=f'{DATA}/extracts'
+METADATA_ADNI=f'{DATA}/metadata/adni'
+METADATA_CANCER=f'{DATA}/metadata/cancer'
+DIVIDE=f'{DATA}/parts'
+PREPROCESSED=f'{DATA}/preprocessed_data'
+ZIPPED=f'{DATA}/zip_data' 
+PICKLE=f'{DATA}/pickle'  
 
 
 # Temp
-SKULL_STRIP=f'{DATA_PWD}/temp/skull_strip'
-IMG_REG=f'{DATA_PWD}/temp/img_reg'
-DENOISE=f'{DATA_PWD}/temp/denoise'
-PETPVC=f'{DATA_PWD}/temp/petpvc'
-BAIS_COR=f'{DATA_PWD}/temp/bias_cor'
-TEMP_OUTPUT=f'{DATA_PWD}/temp/output'
-IMG_REG=f'{DATA_PWD}/temp/img_reg'
+SKULL_STRIP=f'{DATA}/temp/skull_strip'
+IMG_REG=f'{DATA}/temp/img_reg'
+DENOISE=f'{DATA}/temp/denoise'
+PETPVC=f'{DATA}/temp/petpvc'
+BAIS_COR=f'{DATA}/temp/bias_cor'
+TEMP_OUTPUT=f'{DATA}/temp/output'
 
 # Shell Scripts
-SHELL = f"{SCRIPT_PWD}/shell_scripts"
+SHELL = f"{SCRIPT}/shell_scripts"
