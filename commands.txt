@@ -1,4 +1,1 @@
-rm -rf scripts
-rm -rf shell_scripts
-git clone https://github.com/mritopep/refactored.git scripts
-git clone https://github.com/mritopep/shell_scripts.git
+git clone https://github.com/mritopep/scripts.git

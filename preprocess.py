@@ -11,33 +11,29 @@ from util.general import make_dir, get_data, store_data, remove_dir, upzip_gz, s
 from util.paths import *
 
 
-def image_registration(mri_image, pet_image, output_image):
+def image_registration(mri_image, pet_image):
     print("IMAGE REGISTRATION\n")
-    os.system(
-        f"bash {SHELL}/img_rgr.sh {mri_image} {pet_image} {output_image} &> null.txt")
+    os.system(f"bash {SHELL}/img_rgr.sh {mri_image} {pet_image}")
 
 
 def intensity_normalization(input_image, output_image):
     print("DENOISING\n")
-    os.system(
-        f"bash {SHELL}/denoise.sh {input_image} {output_image} &> null.txt")
+    os.system(f"bash {SHELL}/denoise.sh {input_image} {output_image}")
 
 
 def skull_strip(input_image):
     print("SKULL STRIPPING\n")
-    os.system(
-        f"bash {SHELL}/skull_strip.sh {input_image} {SKULL_STRIP} &> null.txt")
+    os.system(f"bash {SHELL}/skull_strip.sh {input_image} {SKULL_STRIP}")
 
 
 def bias_correction(input_image, output_image):
     print("BIAS CORRECTION\n")
-    os.system(f"bash {SHELL}/bias.sh {input_image} {output_image} &> null.txt")
+    os.system(f"bash {SHELL}/bias.sh {input_image} {output_image}")
 
 
 def petpvc(input_image, output_image):
     print("PETPVC\n")
-    os.system(
-        f"bash {SHELL}/petpvc.sh {input_image} {output_image} &> null.txt")
+    os.system(f"bash {SHELL}/petpvc.sh {input_image} {output_image}")
 
 
 def preprocess(key, src_name, sub_scan):
