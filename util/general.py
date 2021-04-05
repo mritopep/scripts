@@ -51,6 +51,7 @@ def list_directory(dir):
         return os.listdir(dir)
     except:
         print("\nNO DIR\n")
+        return []
 
 def make_archive(source, destination):
     base = os.path.basename(destination)
