@@ -52,5 +52,4 @@ def divide(name,path,parts):
         update_progress(count,file_count)
 
 if __name__ == "__main__":
-    make_dir([DOWNLOAD,EXTRACT,ADNI,CANCER,DIVIDE])
     divide("adni",PREPROCESSED,10)

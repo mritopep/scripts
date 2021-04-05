@@ -86,7 +86,6 @@ def get_nii_files(extracted_paths):
 
 
 def get_files(name):
-    make_dir()
     nii_files = []
     files = get_file_ids(name)
     show_data("id going to download", files)

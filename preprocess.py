@@ -43,8 +43,9 @@ def petpvc(input_image, output_image):
 def preprocess(key, src_name, sub_scan):
     scan = sub_scan[key]
 
-    make_dir([SKULL_STRIP, IMG_REG, DENOISE, PETPVC, BAIS_COR,
-             TEMP_OUTPUT, f"{PREPROCESSED}/{src_name}/{key}"])
+    make_dir(TEMP_PATHS)
+
+    make_dir([f"{PREPROCESSED}/{src_name}/{key}"])
 
     mri_path = scan['mri.nii']
     pet_path = scan['pet.nii']
@@ -61,8 +62,7 @@ def preprocess(key, src_name, sub_scan):
     copyfile(f"{TEMP_OUTPUT}pet.nii",
              f"{PREPROCESSED}/{src_name}/{key}/pet.nii")
 
-    remove_dir([SKULL_STRIP, IMG_REG, DENOISE, PETPVC,
-               BAIS_COR, TEMP_OUTPUT, IMG_REG])
+    remove_dir(TEMP_PATHS)
 
 
 def preprocess_mri(mri_path):
@@ -157,8 +157,6 @@ def process_data():
 
 if __name__ == "__main__":
     print("PREPROCESSING")
-    make_dir([DOWNLOAD, EXTRACT, ADNI, CANCER, METADATA_ADNI,
-             METADATA_CANCER, PREPROCESSED, ZIPPED])
     # Testing
     stub()
     # Process
