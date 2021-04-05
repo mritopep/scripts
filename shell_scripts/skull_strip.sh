@@ -1,4 +1,4 @@
-source /work/miniconda/etc/profile.d/conda.sh
-conda init bash
-conda activate skull_strip && \
+source /work/miniconda/etc/profile.d/conda.sh &> null.txt
+conda init bash &> null.txt
+conda activate skull_strip &> null.txt
 skull_strip.py -i $1 -o $2

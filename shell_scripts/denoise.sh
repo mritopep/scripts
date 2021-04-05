@@ -1,4 +1,4 @@
-source /work/miniconda/etc/profile.d/conda.sh
-conda init bash
-conda activate denoise && \
+source /work/miniconda/etc/profile.d/conda.sh &> null.txt
+conda init bash &> null.txt
+conda activate denoise &> null.txt
 soft/denoise.py -i $1 -o $2

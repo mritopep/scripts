@@ -1,4 +1,4 @@
-source /work/miniconda/etc/profile.d/conda.sh
-conda init bash
-conda activate simple_itk && \
+source /work/miniconda/etc/profile.d/conda.sh &> null.txt
+conda init bash &> null.txt
+conda activate simple_itk &> null.txt
 soft/bias_field_correction.py $1 $2
