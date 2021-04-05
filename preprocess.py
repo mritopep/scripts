@@ -109,7 +109,11 @@ def driver(extracted_files, src_name):
 
 def driver_stup():
     sub_scan = {}
-    extracted_files = get_nii_files([EXTRACT+"/filtered_adni_4"])
+    file_name= 'filtered_adni_4.zip'
+    file_path = f"{DOWNLOAD}/{file_name}"
+    file={"name": file_name, "path": file_path}
+    extracted_paths = extract([file])
+    extracted_files = get_nii_files(extracted_paths)
     for i in extracted_files:
         folder = get_folder_name(i['path'])
         if(folder not in sub_scan.keys()):
@@ -134,7 +138,7 @@ def process_data():
 
     # Downloaded files
     for file_name in os.listdir(DOWNLOAD):
-        file_path = DOWNLOAD+"/"+file_name
+        file_path = f"{DOWNLOAD}/{file_name}"
         downloaded_files.append({"name": file_name, "path": file_path})
 
     for file in downloaded_files:
