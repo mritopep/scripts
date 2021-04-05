@@ -11,9 +11,9 @@ from util.general import make_dir, get_data, store_data, remove_dir, upzip_gz, s
 from util.paths import *
 
 
-def image_registration(mri_image, pet_image):
+def image_registration(mri_image, pet_image, output_image):
     print("IMAGE REGISTRATION\n")
-    os.system(f"bash {SHELL}/img_rgr.sh {mri_image} {pet_image}")
+    os.system(f"bash {SHELL}/img_rgr.sh {mri_image} {pet_image} {output_image}")
 
 
 def intensity_normalization(input_image, output_image):
