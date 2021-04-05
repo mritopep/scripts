@@ -34,7 +34,8 @@ def remove_dir(dirs):
 
 def update_progress(curr_count,total_count):
     progress = int((curr_count/total_count)*100)
-    print('\n[{0}] {1}%\n'.format('#'*(progress/10), progress))
+    bar=int(progress/10)
+    print(f"[{'#'*bar}] {progress}%\n")
 
 def lock(data,val):
     if val:
