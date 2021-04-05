@@ -55,7 +55,8 @@ def download(files):
         file_name = fs['name']
         file_path = f"{DOWNLOAD}/{file_name}"
         print(f'Name:{file_name}\nPath: {file_path}')
-        download_file(file_id, file_path)
+        if(not os.path.exists(file_path)):
+            download_file(file_id, file_path)
         downloaded_files.append({"name": file_name, "path": file_path})
     return downloaded_files
 
@@ -66,7 +67,8 @@ def extract(downloaded_files):
     for file in downloaded_files:
         file_name=file['name'][:-4]
         extract_path = f"{EXTRACT}/{file_name}"
-        extract_file(file['path'], extract_path)
+        if(not os.path.exists(extract_path)):
+            extract_file(file['path'], extract_path)
         extract_paths.append(extract_path)
     store_data(extract_paths, f"{PICKLE}/extract_paths.pkl")
     return extract_paths

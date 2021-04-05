@@ -3,17 +3,10 @@ import SimpleITK as sitk
 import os
 import sys
 
-import SimpleITK as sitk
-import os
-import sys
-
 if len(sys.argv)<3:
 	print("Usage :register.py <fixed_img_path> <moving_img_path> [<output_dir_path>]")
 	exit()
 	
-path = ""
-if len(sys.argv) == 4: path = sys.argv[3]
-
 fixed_image = sitk.ReadImage(sys.argv[1], sitk.sitkFloat32)
 moving_image = sitk.ReadImage(sys.argv[2], sitk.sitkFloat32) 
 
@@ -65,4 +58,4 @@ print('Optimizer\'s stopping condition, {0}'.format(registration_method.GetOptim
 
 moving_resampled = sitk.Resample(moving_image, fixed_image, final_transform, sitk.sitkLinear, 0.0, moving_image.GetPixelID())
 
-sitk.WriteImage(moving_resampled, os.path.join(path))
+sitk.WriteImage(moving_resampled, sys.argv[3])
