@@ -69,7 +69,7 @@ def cred_store():
 def get_assigned():
     cred=get_data(f"{PICKLE}/cred.pkl")
     if(cred == "1"):
-        return ["filtered_adni_1.zip","filtered_adni_4.zip","filtered_adni_2.zip"]
+        return ["filtered_adni_1.zip","filtered_adni_2.zip"]
     elif(cred == "2"):
         return ["filtered_adni_3.zip","filtered_adni_5.zip","filtered_adni_6.zip"]
     elif(cred == "4"):
