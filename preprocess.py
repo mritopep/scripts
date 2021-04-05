@@ -7,7 +7,7 @@ import gzip
 
 # import
 from util.get_data import extract, get_nii_files
-from util.general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress, make_archive
+from util.general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress, make_archive, get_assigned
 from util.paths import *
 
 
@@ -131,6 +131,7 @@ def stub():
 def process_data():
     nii_files = []
     downloaded_files = []
+    assigned_files = get_assigned()
 
     # Downloaded files
     for file_name in os.listdir(DOWNLOAD):
@@ -138,6 +139,8 @@ def process_data():
         downloaded_files.append({"name": file_name, "path": file_path})
 
     for file in downloaded_files:
+        if(file["name"] not in assigned_files):
+            continue
         src_name = file['name'][:-4]
         dest_name = src_name.replace("filtered", "preprocessed")
         show_data("name", [src_name, dest_name])
@@ -158,6 +161,6 @@ def process_data():
 if __name__ == "__main__":
     print("\nPREPROCESSING SCRIPT\n")
     # Testing
-    stub()
+    #stub()
     # Process
-    # process_data()
+    process_data()
