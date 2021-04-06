@@ -33,6 +33,7 @@ def remove_dir(dirs):
             pass
 
 def update_progress(curr_count,total_count):
+    print("\nPROGRESS\n")
     progress = int((curr_count/total_count)*100)
     bar=int(progress/50)
     print(f"[{'#'*bar}] {progress}%\n")
