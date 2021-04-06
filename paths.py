@@ -17,7 +17,6 @@ PREPROCESSED = f'{DATA}/preprocessed_data'
 ZIPPED = f'{DATA}/zip_data'
 PICKLE = f'{DATA}/pickle'
 
-
 # Temp
 SKULL_STRIP = f'{DATA}/temp/skull_strip'
 IMG_REG = f'{DATA}/temp/img_reg'
