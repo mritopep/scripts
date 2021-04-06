@@ -98,7 +98,6 @@ def get_nii_files(extracted_paths):
 def get_files(name):
     nii_files = []
     files = get_file_ids(name)
-    show_data("ID", files)
     for file in files:
         downloaded_files = download([file])
         extracted_paths = extract(downloaded_files)
