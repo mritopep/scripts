@@ -3,8 +3,8 @@ import os
 import shutil
 from distutils.dir_util import copy_tree
 
-from util.paths import *
-from util.general import update_progress, make_dir
+from paths import *
+from general import update_progress, make_dir
 
 
 def divide(name, path, parts):

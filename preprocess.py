@@ -6,9 +6,9 @@ import pickle
 import gzip
 
 # import
-from util.get_data import extract, get_nii_files
-from util.general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress, make_archive, get_assigned
-from util.paths import *
+from get_data import extract, get_nii_files
+from general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress, make_archive, get_assigned
+from paths import *
 
 
 def image_registration(mri_image, pet_image, output_image):
