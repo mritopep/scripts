@@ -4,8 +4,8 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
-from util.paths import *
-from util.general import store_data
+from paths import *
+from general import store_data
 
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
 

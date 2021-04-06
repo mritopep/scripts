@@ -3,7 +3,7 @@ import pickle
 import gzip
 import shutil
 
-from util.paths import *
+from paths import *
 
 
 def upzip_gz(input, output):

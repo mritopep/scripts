@@ -6,9 +6,9 @@ import shutil
 import time
 
 # library files
-from util.get_link import get_file_ids
-from util.general import store_data, get_data, make_dir, remove_dir, show_data, get_assigned, update_progress, download_progress
-from util.paths import *
+from get_link import get_file_ids
+from general import store_data, get_data, make_dir, remove_dir, show_data, get_assigned, update_progress, download_progress
+from paths import *
 
 
 def download_file(id, destination):
