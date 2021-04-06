@@ -1,9 +1,9 @@
 import os
 
 PWD = str(os.path.dirname(os.path.abspath(__file__)))
-DATA = PWD.replace("/scripts/util", "/data")
-SCRIPT = PWD.replace("/scripts/util", "/scripts")
-TOKEN = PWD.replace("/scripts/util", "/tokens")
+DATA = PWD.replace("/scripts", "/data")
+SCRIPT = PWD.replace("/scripts", "/scripts")
+TOKEN = PWD.replace("/scripts", "/tokens")
 
 # Locations
 DOWNLOAD = f'{DATA}/downloads'
