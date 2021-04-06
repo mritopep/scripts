@@ -17,4 +17,5 @@ cd scripts
 
 ls
 python init.py
+python util/get_data.py
 python preprocess.py
