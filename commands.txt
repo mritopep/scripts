@@ -1,1 +1,20 @@
+docker pull mritopet123/pipeline:ver1
+
+docker run --name pipeline mritopet123/pipeline:ver1
+docker start pipeline
+docker attach pipeline
+
+cd ..
+
+rm -rf scripts
+rm -rf tokens
+rm -rf raw_data
+
 git clone https://github.com/mritopep/scripts.git
+git clone https://github.com/mritopep/tokens.git
+
+cd scripts
+
+ls
+python init.py
+python preprocess.py
