@@ -42,8 +42,6 @@ def preprocess(key, src_name, sub_scan):
 
     make_dir(TEMP_PATHS)
 
-    make_dir([f"{PREPROCESSED}/{src_name}/{key}"])
-
     mri_path = scan['mri.nii']
     pet_path = scan['pet.nii']
 
@@ -53,6 +51,8 @@ def preprocess(key, src_name, sub_scan):
 
     preprocess_mri(mri_path)
     preprocess_pet(f"{IMG_REG}/pet.nii")
+
+    make_dir([f"{PREPROCESSED}/{src_name}/{key}"])
 
     copyfile(f"{TEMP_OUTPUT}/mri.nii",
              f"{PREPROCESSED}/{src_name}/{key}/mri.nii")
