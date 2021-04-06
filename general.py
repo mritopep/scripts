@@ -45,7 +45,7 @@ def update_progress(curr_count, total_count):
 
 
 def download_progress(curr_byte):
-    gb_data = 1024*1024*1024*8
+    gb_data = 1024*1024*1024
     progress = int((curr_byte/gb_data)*100)
     bar = int(progress/2)
     print(f"\r[{'#'*bar}] {progress}%", end="\r")
