@@ -13,7 +13,8 @@ from util.paths import *
 
 def image_registration(mri_image, pet_image, output_image):
     print("\nIMAGE REGISTRATION\n")
-    os.system(f"bash {SHELL}/img_rgr.sh {mri_image} {pet_image} {output_image}")
+    os.system(
+        f"bash {SHELL}/img_rgr.sh {mri_image} {pet_image} {output_image}")
 
 
 def intensity_normalization(input_image, output_image):
@@ -105,9 +106,9 @@ def driver(extracted_files, src_name):
 
 def driver_stup():
     sub_scan = {}
-    file_name= 'filtered_adni_4.zip'
+    file_name = 'filtered_adni_4.zip'
     file_path = f"{DOWNLOAD}/{file_name}"
-    file={"name": file_name, "path": file_path}
+    file = {"name": file_name, "path": file_path}
     extracted_paths = extract([file])
     extracted_files = get_nii_files(extracted_paths)
     for i in extracted_files:
@@ -161,6 +162,6 @@ def process_data():
 if __name__ == "__main__":
     print("\nPREPROCESSING SCRIPT\n")
     # Testing
-    #stub()
+    # stub()
     # Process
     process_data()

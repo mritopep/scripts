@@ -7,7 +7,7 @@ import time
 
 # library files
 from util.get_link import get_file_ids
-from util.general import store_data, get_data, make_dir, remove_dir, show_data,get_assigned
+from util.general import store_data, get_data, make_dir, remove_dir, show_data, get_assigned, update_progress, download_progress
 from util.paths import *
 
 
@@ -31,20 +31,27 @@ def get_confirm_token(response):
 
 def save_response_content(response, destination):
     CHUNK_SIZE = 32768
+    count = 0
     with open(destination, "wb") as f:
         for chunk in response.iter_content(CHUNK_SIZE):
             if chunk:
+                count += CHUNK_SIZE
                 f.write(chunk)
+                download_progress(count)
 
 
 def extract_file(source, destination):
     with zipfile.ZipFile(source, 'r') as zip_ref:
         files = zip_ref.infolist()
+        total_files = len(files)
+        count = 0
         for file in files:
+            count += 1
             try:
                 zip_ref.extract(file, path=destination)
             except:
                 print(f"\nBAD FILE: {file.filename}\n")
+            update_progress(count, total_files)
 
 
 def download(files):
@@ -65,8 +72,9 @@ def extract(downloaded_files):
     print("\nEXTRACTING FILES\n")
     extract_paths = []
     for file in downloaded_files:
-        file_name=file['name'][:-4]
+        file_name = file['name'][:-4]
         extract_path = f"{EXTRACT}/{file_name}"
+        print(f'\nName:{file_name}\nPath: {extract_path}\n')
         if(not os.path.exists(extract_path)):
             extract_file(file['path'], extract_path)
         extract_paths.append(extract_path)
@@ -99,6 +107,7 @@ def get_files(name):
         nii_files.extend(get_nii_files(extracted_paths))
     store_data(nii_files, f"{PICKLE}/nii_files.pkl")
     return nii_files
+
 
 def get_assigned_files(name):
     assigned_files = get_assigned()
