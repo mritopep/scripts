@@ -39,18 +39,16 @@ def remove_dir(dirs):
 
 
 def update_progress(curr_count, total_count):
-    print("\nPROGRESS\n")
     progress = int((curr_count/total_count)*100)
     bar = int(progress/50)
-    print(f"\r[{'#'*bar}] {progress}%\n")
+    print(f"\r[{'#'*bar}] {progress}%")
 
 
 def download_progress(curr_byte):
     gb_data = 1024*1024*1024*8
-    print("\nDOWNLOAD PROGRESS\n")
     progress = int((curr_byte/gb_data)*100)
     bar = int(progress/50)
-    print(f"\r[{'#'*bar}] {progress}%\n")
+    print(f"\r[{'#'*bar}] {progress}%")
 
 
 def lock(data, val):
