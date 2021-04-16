@@ -94,7 +94,7 @@ def driver(extracted_files, src_name):
 
     preprocessed_files = list_directory(f"{PREPROCESSED}/{src_name}")
 
-    total_files = len(extracted_files)
+    total_files = len(sub_scan)/2
     count = 0
 
     for k in sub_scan:
