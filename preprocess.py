@@ -10,17 +10,21 @@ from get_data import extract, get_nii_files
 from general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress, make_archive, get_assigned
 from paths import *
 
+def exception_handle(log_name):
+    with open(f"./logs/{log_name}", "r") as log:
+        status = log.read().strip()
+        if(status == "failed"):
+            print(f"\n{log_name} FAILED\n")
+            return False
+        print(f"\n{log_name} PASSED\n")
+        return True
 
 def image_registration(mri_image, pet_image, output_image):
     print("\nIMAGE REGISTRATION\n")
     log_name = "IMAGE_REGISTRATION"
     os.system(
         f"bash {SHELL}/img_rgr.sh {mri_image} {pet_image} {output_image} {log_name}")
-    with open(log_name, "r") as log:
-        status = log.read().strip()
-        if(status == "failed"):
-            return False
-        return True
+    exception_handle(log_name)
 
 
 def intensity_normalization(input_image, output_image):
@@ -28,11 +32,7 @@ def intensity_normalization(input_image, output_image):
     log_name = "DENOISING"
     os.system(
         f"bash {SHELL}/denoise.sh {input_image} {output_image} {log_name}")
-    with open(log_name, "r") as log:
-        status = log.read().strip()
-        if(status == "failed"):
-            return False
-        return True
+    exception_handle(log_name)
 
 
 def skull_strip(input_image):
@@ -43,22 +43,14 @@ def skull_strip(input_image):
     scan = input_image.split("/")[-1][:-4]
     upzip_gz(f"{SKULL_STRIP}/{scan}_masked.nii.gz",
              f"{SKULL_STRIP}/{scan}_sk.nii")
-    with open(log_name, "r") as log:
-        status = log.read().strip()
-        if(status == "failed"):
-            return False
-        return True
+    exception_handle(log_name)
 
 
 def bias_correction(input_image, output_image):
     print("\nBIAS CORRECTION\n")
     log_name = "BIAS_CORRECTION"
     os.system(f"bash {SHELL}/bias.sh {input_image} {output_image} {log_name}")
-    with open(log_name, "r") as log:
-        status = log.read().strip()
-        if(status == "failed"):
-            return False
-        return True
+    exception_handle(log_name)
 
 
 def petpvc(input_image, output_image):
@@ -66,13 +58,8 @@ def petpvc(input_image, output_image):
     log_name = "PETPVC"
     os.system(
         f"bash {SHELL}/petpvc.sh {input_image} {output_image} {log_name}")
-    with open(log_name, "r") as log:
-        status = log.read().strip()
-        if(status == "failed"):
-            return False
-        return True
-
-
+    exception_handle(log_name)
+    
 def preprocess(key, src_name, sub_scan):
     scan = sub_scan[key]
 
