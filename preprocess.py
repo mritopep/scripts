@@ -64,7 +64,8 @@ def bias_correction(input_image, output_image):
 def petpvc(input_image, output_image):
     print("\nPETPVC\n")
     log_name = "PETPVC"
-    os.system(f"bash {SHELL}/petpvc.sh {input_image} {output_image} {log_name}")
+    os.system(
+        f"bash {SHELL}/petpvc.sh {input_image} {output_image} {log_name}")
     with open(log_name, "r") as log:
         status = log.read().strip()
         if(status == "failed"):
@@ -85,10 +86,10 @@ def preprocess(key, src_name, sub_scan):
     if (not image_registration(mri_path, pet_path, f"{IMG_REG}/pet.nii")):
         return False
 
-    if(not preprocess_mri(mri_path, intensity_normalization=True, skull_strip=True, bias_correction=True)):
+    if(not preprocess_mri(mri_path, Intensity_Normalization=True, Skull_Strip=True, Bias_Correction=True)):
         return False
 
-    if(not preprocess_pet(f"{IMG_REG}/pet.nii", skull_strip=True, petpvc=True)):
+    if(not preprocess_pet(f"{IMG_REG}/pet.nii", Skull_Strip=True, Petpvc=True)):
         return False
 
     make_dir([f"{PREPROCESSED}/{src_name}/{key}"])
@@ -101,18 +102,18 @@ def preprocess(key, src_name, sub_scan):
     remove_dir(TEMP_PATHS)
 
 
-def preprocess_mri(input, intensity_normalization=True, skull_strip=True, bias_correction=True):
-    if(intensity_normalization):
+def preprocess_mri(input, Intensity_Normalization=True, Skull_Strip=True, Bias_Correction=True):
+    if(Intensity_Normalization):
         if(intensity_normalization(input, f"{DENOISE}/mri")):
             input = f"{DENOISE}/mri"
         else:
             return False
-    if(skull_strip):
+    if(Skull_Strip):
         if(skull_strip(input)):
             input = f"{SKULL_STRIP}/mri_sk.nii"
         else:
             return False
-    if(bias_correction):
+    if(Bias_Correction):
         if(bias_correction(input, f"{BAIS_COR}/mri.nii")):
             input = f"{BAIS_COR}/mri.nii"
         else:
@@ -121,13 +122,13 @@ def preprocess_mri(input, intensity_normalization=True, skull_strip=True, bias_c
     return True
 
 
-def preprocess_pet(input, skull_strip=True, petpvc=True):
-    if(skull_strip):
+def preprocess_pet(input, Skull_Strip=True, Petpvc=True):
+    if(Skull_Strip):
         if(skull_strip(input)):
             input = f"{SKULL_STRIP}/pet_sk.nii"
         else:
             return False
-    if(petpvc):
+    if(Petpvc):
         if(petpvc(input, f"{PETPVC}/pet.nii")):
             input = f"{PETPVC}/pet.nii"
         else:
