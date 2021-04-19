@@ -105,7 +105,7 @@ def preprocess(key, src_name, sub_scan):
 def preprocess_mri(input, Intensity_Normalization=True, Skull_Strip=True, Bias_Correction=True):
     if(Intensity_Normalization):
         if(intensity_normalization(input, f"{DENOISE}/mri")):
-            input = f"{DENOISE}/mri"
+            input = f"{DENOISE}/mri.nii"
         else:
             return False
     if(Skull_Strip):
