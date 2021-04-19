@@ -103,6 +103,7 @@ def preprocess(key, src_name, sub_scan):
 
 
 def preprocess_mri(input, Intensity_Normalization=True, Skull_Strip=True, Bias_Correction=True):
+    print("\n-------------------MRI PREPROCESS STARTED--------------------\n")
     if(Intensity_Normalization):
         if(intensity_normalization(input, f"{DENOISE}/mri")):
             input = f"{DENOISE}/mri.nii"
@@ -119,10 +120,12 @@ def preprocess_mri(input, Intensity_Normalization=True, Skull_Strip=True, Bias_C
         else:
             return False
     copyfile(input, f"{TEMP_OUTPUT}/mri.nii")
+    print("\n-------------------MRI PREPROCESS COMPELETED--------------------\n")
     return True
 
 
 def preprocess_pet(input, Skull_Strip=True, Petpvc=True):
+    print("\n--------------------PET PREPROCESS STARTED--------------------\n")
     if(Skull_Strip):
         if(skull_strip(input)):
             input = f"{SKULL_STRIP}/pet_sk.nii"
@@ -134,6 +137,7 @@ def preprocess_pet(input, Skull_Strip=True, Petpvc=True):
         else:
             return False
     copyfile(input, f"{TEMP_OUTPUT}/pet.nii")
+    print("\n--------------------PET PREPROCESS COMPELETED--------------------\n")
     return True
 
 
@@ -163,7 +167,9 @@ def driver(extracted_files, src_name):
         if(k not in preprocessed_files):
             if(not preprocess(k, src_name, sub_scan)):
                 continue
+        print("\n--------------PROGRESS---------------\n")
         update_progress(count, total_files)
+        print("\n-------------------------------------\n")
 
 
 def driver_stup():
@@ -212,10 +218,10 @@ def process_data():
         extracted_paths = extract([file])
         extracted_files = get_nii_files(extracted_paths)
 
-        print("\nPREPROCESSING\n")
+        print(f"\n{src_name.upper()} PREPROCESSING\n")
         driver(extracted_files, src_name)
 
-        print("\nZIPPING\n")
+        print(f"\n{src_name.upper()} ZIPPING\n")
         make_archive(f"{PREPROCESSED}/{src_name}", f"{ZIPPED}/{dest_name}.zip")
 
         # print("REMOVING")
