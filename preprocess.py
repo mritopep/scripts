@@ -83,12 +83,13 @@ def preprocess(key, src_name, sub_scan):
     show_data("path", [mri_path, pet_path])
 
     if (not image_registration(mri_path, pet_path, f"{IMG_REG}/pet.nii")):
-        return
+        return False
 
     if(not preprocess_mri(mri_path, intensity_normalization=True, skull_strip=True, bias_correction=True)):
-        return
+        return False
+
     if(not preprocess_pet(f"{IMG_REG}/pet.nii", skull_strip=True, petpvc=True)):
-        return
+        return False
 
     make_dir([f"{PREPROCESSED}/{src_name}/{key}"])
 
@@ -159,7 +160,8 @@ def driver(extracted_files, src_name):
     for k in sub_scan:
         count += 1
         if(k not in preprocessed_files):
-            preprocess(k, src_name, sub_scan)
+            if(not preprocess(k, src_name, sub_scan)):
+                continue
         update_progress(count, total_files)
 
 
@@ -177,7 +179,8 @@ def driver_stup():
             sub_scan[folder].update({i['name']: i['path']})
         else:
             sub_scan[folder].update({i['name']: i['path']})
-    preprocess("002_S_2073_2", "sample", sub_scan)
+    if(not preprocess("002_S_2073_2", "sample", sub_scan)):
+        exit
 
 
 def stub():
