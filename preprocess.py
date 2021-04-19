@@ -13,28 +13,63 @@ from paths import *
 
 def image_registration(mri_image, pet_image, output_image):
     print("\nIMAGE REGISTRATION\n")
+    log_name = "IMAGE_REGISTRATION"
     os.system(
-        f"bash {SHELL}/img_rgr.sh {mri_image} {pet_image} {output_image}")
+        f"bash {SHELL}/img_rgr.sh {mri_image} {pet_image} {output_image} {log_name}")
+    with open(log_name, "r") as log:
+        status = log.read().strip()
+        if(status == "failed"):
+            return False
+        return True
 
 
 def intensity_normalization(input_image, output_image):
     print("\nDENOISING\n")
-    os.system(f"bash {SHELL}/denoise.sh {input_image} {output_image}")
+    log_name = "DENOISING"
+    os.system(
+        f"bash {SHELL}/denoise.sh {input_image} {output_image} {log_name}")
+    with open(log_name, "r") as log:
+        status = log.read().strip()
+        if(status == "failed"):
+            return False
+        return True
 
 
 def skull_strip(input_image):
     print("\nSKULL STRIPPING\n")
-    os.system(f"bash {SHELL}/skull_strip.sh {input_image} {SKULL_STRIP}")
+    log_name = "SKULL_STRIPPING"
+    os.system(
+        f"bash {SHELL}/skull_strip.sh {input_image} {SKULL_STRIP} {log_name}")
+    scan = input_image.split("/")[-1][:-4]
+    upzip_gz(f"{SKULL_STRIP}/{scan}_masked.nii.gz",
+             f"{SKULL_STRIP}/{scan}_sk.nii")
+    with open(log_name, "r") as log:
+        status = log.read().strip()
+        if(status == "failed"):
+            return False
+        return True
 
 
 def bias_correction(input_image, output_image):
     print("\nBIAS CORRECTION\n")
-    os.system(f"bash {SHELL}/bias.sh {input_image} {output_image}")
+    log_name = "BIAS_CORRECTION"
+    os.system(f"bash {SHELL}/bias.sh {input_image} {output_image} {log_name}")
+    with open(log_name, "r") as log:
+        status = log.read().strip()
+        if(status == "failed"):
+            return False
+        return True
 
 
 def petpvc(input_image, output_image):
     print("\nPETPVC\n")
-    os.system(f"bash {SHELL}/petpvc.sh {input_image} {output_image}")
+    log_name = "PETPVC"
+    os.system(f"bash {SHELL}/petpvc.sh {input_image} {output_image} {log_name}")
+    with open(log_name, "r") as log:
+        status = log.read().strip()
+        if(status == "failed"):
+            return False
+        return True
 
 
 def preprocess(key, src_name, sub_scan):
@@ -47,10 +82,13 @@ def preprocess(key, src_name, sub_scan):
 
     show_data("path", [mri_path, pet_path])
 
-    image_registration(mri_path, pet_path, f"{IMG_REG}/pet.nii")
+    if (not image_registration(mri_path, pet_path, f"{IMG_REG}/pet.nii")):
+        return
 
-    preprocess_mri(mri_path)
-    preprocess_pet(f"{IMG_REG}/pet.nii")
+    if(not preprocess_mri(mri_path, intensity_normalization=True, skull_strip=True, bias_correction=True)):
+        return
+    if(not preprocess_pet(f"{IMG_REG}/pet.nii", skull_strip=True, petpvc=True)):
+        return
 
     make_dir([f"{PREPROCESSED}/{src_name}/{key}"])
 
@@ -62,18 +100,39 @@ def preprocess(key, src_name, sub_scan):
     remove_dir(TEMP_PATHS)
 
 
-def preprocess_mri(mri_path):
-    intensity_normalization(mri_path, f"{DENOISE}/mri")
-    skull_strip(f"{DENOISE}/mri.nii")
-    upzip_gz(f"{SKULL_STRIP}/mri_masked.nii.gz", f"{SKULL_STRIP}/mri_sk.nii")
-    bias_correction(f"{SKULL_STRIP}/mri_sk.nii", f"{TEMP_OUTPUT}/mri.nii")
+def preprocess_mri(input, intensity_normalization=True, skull_strip=True, bias_correction=True):
+    if(intensity_normalization):
+        if(intensity_normalization(input, f"{DENOISE}/mri")):
+            input = f"{DENOISE}/mri"
+        else:
+            return False
+    if(skull_strip):
+        if(skull_strip(input)):
+            input = f"{SKULL_STRIP}/mri_sk.nii"
+        else:
+            return False
+    if(bias_correction):
+        if(bias_correction(input, f"{BAIS_COR}/mri.nii")):
+            input = f"{BAIS_COR}/mri.nii"
+        else:
+            return False
+    copyfile(input, f"{TEMP_OUTPUT}/mri.nii")
+    return True
 
 
-def preprocess_pet(pet_path):
-    skull_strip(pet_path)
-    upzip_gz(f"{SKULL_STRIP}/pet_masked.nii.gz",
-             f"{SKULL_STRIP}/pet_sk.nii")
-    petpvc(f"{SKULL_STRIP}/pet_sk.nii", f"{TEMP_OUTPUT}/pet.nii")
+def preprocess_pet(input, skull_strip=True, petpvc=True):
+    if(skull_strip):
+        if(skull_strip(input)):
+            input = f"{SKULL_STRIP}/pet_sk.nii"
+        else:
+            return False
+    if(petpvc):
+        if(petpvc(input, f"{PETPVC}/pet.nii")):
+            input = f"{PETPVC}/pet.nii"
+        else:
+            return False
+    copyfile(input, f"{TEMP_OUTPUT}/pet.nii")
+    return True
 
 
 def get_folder_name(path):

@@ -99,4 +99,4 @@ def get_assigned():
     elif(cred == "3"):
         return ["filtered_adni_10.zip", "filtered_adni_11.zip"]
     else:
-        return ['filtered_adni_4.zip', 'filtered_adni_11.zip', 'filtered_adni_5.zip', 'filtered_adni_9.zip', 'filtered_adni_6.zip', 'filtered_adni_2.zip', 'filtered_adni_7.zip', 'filtered_adni_3.zip', 'filtered_adni_8.zip', 'filtered_adni_1.zip', 'filtered_adni_10.zip']
+        return ['filtered_adni_1.zip', 'filtered_adni_2.zip', 'filtered_adni_3.zip', 'filtered_adni_4.zip', 'filtered_adni_5.zip', 'filtered_adni_6.zip', 'filtered_adni_7.zip', 'filtered_adni_8.zip', 'filtered_adni_9.zip', 'filtered_adni_10.zip', 'filtered_adni_11.zip']
