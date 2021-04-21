@@ -1,6 +1,6 @@
 docker pull mritopet123/pipeline:ver1
 
-docker run --name pipeline mritopet123/pipeline:ver1
+docker run -it --name pipeline mritopet123/pipeline:ver1
 docker start pipeline
 docker attach pipeline
 
