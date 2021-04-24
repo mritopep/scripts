@@ -21,6 +21,9 @@ def exception_handle(log_name):
 
 def image_registration(mri_image, pet_image, output_image):
     print("\nIMAGE REGISTRATION\n")
+    # print("\nmri image: "+ mri_image)
+    # print("\npet image: "+ pet_image)
+    # print("\noutput image: "+ output_image)
     log_name = "IMAGE_REGISTRATION"
     os.system(
         f"bash {SHELL}/img_rgr.sh {mri_image} {pet_image} {output_image} {log_name}")
@@ -29,6 +32,8 @@ def image_registration(mri_image, pet_image, output_image):
 
 def intensity_normalization(input_image, output_image):
     print("\nDENOISING\n")
+    # print("\ninput image: "+ input_image)
+    # print("\noutput image: "+ output_image)
     log_name = "DENOISING"
     os.system(
         f"bash {SHELL}/denoise.sh {input_image} {output_image} {log_name}")
@@ -36,11 +41,13 @@ def intensity_normalization(input_image, output_image):
 
 
 def skull_strip(input_image):
+    scan = input_image.split("/")[-1][:-4]
     print("\nSKULL STRIPPING\n")
+    # print("\ninput image: "+ input_image)
+    # print("\noutput image: "+ f"{SKULL_STRIP}/{scan}_sk.nii")
     log_name = "SKULL_STRIPPING"
     os.system(
         f"bash {SHELL}/skull_strip.sh {input_image} {SKULL_STRIP} {log_name}")
-    scan = input_image.split("/")[-1][:-4]
     upzip_gz(f"{SKULL_STRIP}/{scan}_masked.nii.gz",
              f"{SKULL_STRIP}/{scan}_sk.nii")
     return exception_handle(log_name)
@@ -48,6 +55,8 @@ def skull_strip(input_image):
 
 def bias_correction(input_image, output_image):
     print("\nBIAS CORRECTION\n")
+    # print("\ninput image: "+ input_image)
+    # print("\noutput image: "+ output_image)
     log_name = "BIAS_CORRECTION"
     os.system(f"bash {SHELL}/bias.sh {input_image} {output_image} {log_name}")
     return exception_handle(log_name)
@@ -55,6 +64,8 @@ def bias_correction(input_image, output_image):
 
 def petpvc(input_image, output_image):
     print("\nPETPVC\n")
+    # print("\ninput image: "+ input_image)
+    # print("\noutput image: "+ output_image)
     log_name = "PETPVC"
     os.system(
         f"bash {SHELL}/petpvc.sh {input_image} {output_image} {log_name}")
@@ -70,13 +81,19 @@ def preprocess(key, src_name, sub_scan):
 
     show_data("path", [mri_path, pet_path])
 
+    # Pipeline Configuration
+    Intensity_Normalization = True
+    Skull_Strip = True
+    Bias_Correction = True
+    Petpvc = True
+
     if (not image_registration(mri_path, pet_path, f"{IMG_REG}/pet.nii")):
         return False
 
-    if(not preprocess_mri(mri_path, Intensity_Normalization=True, Skull_Strip=True, Bias_Correction=True)):
+    if(not preprocess_mri(mri_path, Intensity_Normalization=Intensity_Normalization, Skull_Strip=Skull_Strip, Bias_Correction=Bias_Correction)):
         return False
 
-    if(not preprocess_pet(f"{IMG_REG}/pet.nii", Skull_Strip=True, Petpvc=True)):
+    if(not preprocess_pet(f"{IMG_REG}/pet.nii", Skull_Strip=Skull_Strip, Petpvc=Petpvc)):
         return False
 
     make_dir([f"{PREPROCESSED}/{src_name}/{key}"])
@@ -86,7 +103,7 @@ def preprocess(key, src_name, sub_scan):
     copyfile(f"{TEMP_OUTPUT}/pet.nii",
              f"{PREPROCESSED}/{src_name}/{key}/pet.nii")
 
-    remove_dir(TEMP_PATHS)
+    #remove_dir(TEMP_PATHS)
 
 
 def preprocess_mri(input, Intensity_Normalization=True, Skull_Strip=True, Bias_Correction=True):
@@ -107,6 +124,7 @@ def preprocess_mri(input, Intensity_Normalization=True, Skull_Strip=True, Bias_C
         else:
             return False
     copyfile(input, f"{TEMP_OUTPUT}/mri.nii")
+    print("\nTemp mri image: "+ f"{TEMP_OUTPUT}/mri.nii")
     print("\n-------------------MRI PREPROCESS COMPELETED--------------------\n")
     return True
 
@@ -124,6 +142,7 @@ def preprocess_pet(input, Skull_Strip=True, Petpvc=True):
         else:
             return False
     copyfile(input, f"{TEMP_OUTPUT}/pet.nii")
+    print("\nTemp pet image: "+ f"{TEMP_OUTPUT}/pet.nii")
     print("\n--------------------PET PREPROCESS COMPELETED--------------------\n")
     return True
 
@@ -161,7 +180,7 @@ def driver(extracted_files, src_name):
 
 def driver_stup():
     sub_scan = {}
-    file_name = 'filtered_adni_4.zip'
+    file_name = 'filtered_adni_1.zip'
     file_path = f"{DOWNLOAD}/{file_name}"
     file = {"name": file_name, "path": file_path}
     extracted_paths = extract([file])
@@ -173,7 +192,7 @@ def driver_stup():
             sub_scan[folder].update({i['name']: i['path']})
         else:
             sub_scan[folder].update({i['name']: i['path']})
-    if(not preprocess("002_S_2073_2", "sample", sub_scan)):
+    if(not preprocess("002_S_0685_1", "sample", sub_scan)):
         exit
 
 
@@ -218,6 +237,6 @@ def process_data():
 if __name__ == "__main__":
     print("\nPREPROCESSING SCRIPT\n")
     # Testing
-    # stub()
+    stub()
     # Process
-    process_data()
+    #process_data()
