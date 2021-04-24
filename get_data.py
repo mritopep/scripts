@@ -103,9 +103,9 @@ def get_files(name):
         extracted_paths = extract(downloaded_files)
     #   print(f"\nREMOVE: {downloaded_files[0]['path']}\n")
     #   os.remove(downloaded_files[0]['path'])
-        nii_files.extend(get_nii_files(extracted_paths))
-    store_data(nii_files, f"{PICKLE}/nii_files.pkl")
-    return nii_files
+    #     nii_files.extend(get_nii_files(extracted_paths))
+    # store_data(nii_files, f"{PICKLE}/nii_files.pkl")
+    return extracted_paths
 
 
 def get_assigned_files(name):

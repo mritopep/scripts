@@ -1,0 +1,3 @@
+skimage
+pillow
+med2image
