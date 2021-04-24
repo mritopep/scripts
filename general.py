@@ -41,7 +41,8 @@ def remove_dir(dirs):
 def update_progress(curr_count, total_count):
     progress = int((curr_count/total_count)*100)
     bar = int(progress/2)
-    print(f"\r[{'#'*bar}] {progress}%", end="\r")
+    time_taken = total_count - curr_count
+    print(f"\r[{'#'*bar}] {progress}% \n ESTIMATED TIME: {time_taken*10} min")
 
 
 def download_progress(curr_byte):

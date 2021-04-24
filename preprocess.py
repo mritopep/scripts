@@ -173,9 +173,9 @@ def driver(extracted_files, src_name):
         if(k not in preprocessed_files):
             if(not preprocess(k, src_name, sub_scan)):
                 continue
-        print("\n--------------PROGRESS---------------\n")
+        print("\n"+"-"*25+"PROGRESS"+"-"*25+"\n")
         update_progress(count, total_files)
-        print("\n-------------------------------------\n")
+        print("\n"+"-"*58+"\n")
 
 
 def driver_stup():
@@ -237,6 +237,6 @@ def process_data():
 if __name__ == "__main__":
     print("\nPREPROCESSING SCRIPT\n")
     # Testing
-    stub()
+    # stub()
     # Process
-    #process_data()
+    process_data()
