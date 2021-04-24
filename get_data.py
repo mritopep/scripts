@@ -30,6 +30,7 @@ def get_confirm_token(response):
 
 
 def save_response_content(response, destination):
+    print("PROGRESS BAR COMPARED TO 1GB MAY NOT BE ACURATE")
     CHUNK_SIZE = 32768
     count = 0
     with open(destination, "wb") as f:
