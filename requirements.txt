@@ -1,3 +1,5 @@
 skimage
 pillow
 med2image
+nibabel
+opencv-python
