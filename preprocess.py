@@ -168,6 +168,8 @@ def driver(extracted_files, src_name):
     total_files = len(sub_scan)
     count = 0
 
+    update_progress(count, total_files)
+    
     for k in sub_scan:
         count += 1
         if(k not in preprocessed_files):
