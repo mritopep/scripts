@@ -6,7 +6,7 @@ import pickle
 import gzip
 
 # import
-from get_data import extract, get_nii_files
+from get_data import extract, get_nii
 from general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress, make_archive, get_assigned
 from paths import *
 
@@ -226,7 +226,7 @@ def process_data():
         show_data("name", [src_name, dest_name])
 
         extracted_paths = extract([file])
-        extracted_files = get_nii_files(extracted_paths)
+        extracted_files = get_nii(extracted_paths)
 
         print(f"\n{src_name.upper()} PREPROCESSING\n")
         driver(extracted_files, src_name)
