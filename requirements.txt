@@ -1,4 +1,4 @@
-skimage
+scikit-image
 pillow
 med2image
 nibabel

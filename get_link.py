@@ -49,6 +49,8 @@ def match_file_name(file_name, data_name):
         return True
     if(file_name.find("filtered_cancer") != -1 and data_name == "filtered_cancer"):
         return True
+    if(file_name.find("preprocessed_adni") != -1 and data_name == "preprocessed_adni"):
+        return True
     return False
 
 

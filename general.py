@@ -44,6 +44,10 @@ def update_progress(curr_count, total_count):
     time_taken = total_count - curr_count
     print(f"\r[{'#'*bar}] {progress}% \n ESTIMATED TIME: {time_taken*10} min")
 
+def extract_progress(curr_count, total_count):
+    progress = int((curr_count/total_count)*100)
+    bar = int(progress/2)
+    print(f"\r[{'#'*bar}] {progress}%", end="\r")
 
 def download_progress(curr_byte):
     gb_data = 1024*1024*1024

@@ -52,7 +52,7 @@ def extract_file(source, destination):
                 zip_ref.extract(file, path=destination)
             except:
                 print(f"\nBAD FILE: {file.filename}\n")
-            update_progress(count, total_files)
+            extract_progress(count, total_files)
 
 
 def download(files):
@@ -83,7 +83,7 @@ def extract(downloaded_files):
     return extract_paths
 
 
-def get_nii_files(extracted_paths):
+def get_nii(extracted_paths):
     print("\nSELECTING SCANS FILES \n")
     nii_files = []
     for extract_path in extracted_paths:
@@ -97,15 +97,23 @@ def get_nii_files(extracted_paths):
 
 
 def get_files(name):
+    files = get_file_ids(name)
+    for file in files:
+        downloaded_files = download([file])
+        extracted_paths = extract(downloaded_files)
+    return extracted_paths
+
+
+def get_nii_files(name):
     nii_files = []
     files = get_file_ids(name)
     for file in files:
         downloaded_files = download([file])
         extracted_paths = extract(downloaded_files)
-    #   print(f"\nREMOVE: {downloaded_files[0]['path']}\n")
-    #   os.remove(downloaded_files[0]['path'])
-    #     nii_files.extend(get_nii_files(extracted_paths))
-    # store_data(nii_files, f"{PICKLE}/nii_files.pkl")
+        # print(f"\nREMOVE: {downloaded_files[0]['path']}\n")
+        # os.remove(downloaded_files[0]['path'])
+        nii_files.extend(get_nii(extracted_paths))
+    store_data(nii_files, f"{PICKLE}/nii_files.pkl")
     return extracted_paths
 
 
@@ -121,7 +129,7 @@ def get_assigned_files(name):
         extracted_paths = extract(downloaded_files)
     #   print(f"\nREMOVE: {downloaded_files[0]['path']}\n")
     #   os.remove(downloaded_files[0]['path'])
-        nii_files.extend(get_nii_files(extracted_paths))
+        nii_files.extend(get_nii(extracted_paths))
     store_data(nii_files, f"{PICKLE}/nii_files.pkl")
     return nii_files
 

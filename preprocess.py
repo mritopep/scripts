@@ -219,6 +219,10 @@ def process_data():
             continue
         src_name = file['name'][:-4]
         dest_name = src_name.replace("filtered", "preprocessed")
+
+        if(f"{dest_name}.zip" in os.listdir(ZIPPED)):
+            continue
+        
         show_data("name", [src_name, dest_name])
 
         extracted_paths = extract([file])
