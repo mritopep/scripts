@@ -7,7 +7,7 @@ import time
 
 # library files
 from get_link import get_file_ids
-from general import store_data, get_data, make_dir, remove_dir, show_data, get_assigned, update_progress, download_progress
+from general import store_data, get_data, make_dir, remove_dir, show_data, get_assigned, update_progress, download_progress, extract_progress
 from paths import *
 
 
