@@ -4,3 +4,8 @@ med2image
 nibabel
 opencv-python
 imageio
+requests
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+six
