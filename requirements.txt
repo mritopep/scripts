@@ -3,3 +3,4 @@ pillow
 med2image
 nibabel
 opencv-python
+imageio

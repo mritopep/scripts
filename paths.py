@@ -16,6 +16,7 @@ DIVIDE = f'{DATA}/parts'
 PREPROCESSED = f'{DATA}/preprocessed_data'
 ZIPPED = f'{DATA}/zip_data'
 PICKLE = f'{DATA}/pickle'
+POSTPROCESS = f'{DATA}/postprocess'
 
 # Temp
 SKULL_STRIP = f'{DATA}/temp/skull_strip'

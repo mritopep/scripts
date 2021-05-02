@@ -14,7 +14,6 @@ def nii_dimension(file):
     col = data.shape[2]
     return [row, col]
 
-
 def convert_img(nii_file, output_folder):
     os.system("med2image -i " + nii_file + " -o " + output_folder)
 
