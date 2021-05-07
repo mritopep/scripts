@@ -201,9 +201,10 @@ def postprocess(key, sub_scan):
 
     # if(not postprocess_file(pet_path, "pet", Dimension_Check=Dimension_Check, Feature_Selection=Feature_Selection, Structural_Similarity=Structural_Similarity)):
     #     return False
-
+    global MEAN_MSE, MEAN_SSIM, MEAN_DIST
     print({'subject_id':scan, 'mse':MEAN_MSE, 'ssim':MEAN_SSIM, 'distance':MEAN_DIST})
-    df = df.append({'subject_id':scan, 'mse':MEAN_MSE, 'ssim':MEAN_SSIM, 'distance':MEAN_DIST},ignore_index=True)
+    global df
+    df.append({'subject_id':scan, 'mse':MEAN_MSE, 'ssim':MEAN_SSIM, 'distance':MEAN_DIST},ignore_index=True)
 
     make_dir([f"{POSTPROCESS}/{key}"])
     make_dir([f"{POSTPROCESS}/{key}/img"])
