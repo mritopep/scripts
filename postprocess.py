@@ -277,8 +277,8 @@ def post_preprocess():
         print(f"\n{src_name.upper()} PREPROCESSING\n")
         driver(extracted_files, src_name)
 
-        print(f"\n{src_name.upper()} ZIPPING\n")
-        make_archive(f"{POSTPROCESS}", f"{ZIPPED}/{dest_name}.zip")
+        # print(f"\n{src_name.upper()} ZIPPING\n")
+        # make_archive(f"{POSTPROCESS}", f"{ZIPPED}/{dest_name}.zip")
 
     # print("REMOVING")
     # shutil.rmtree(f"{POSTPROCESS}")
