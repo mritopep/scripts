@@ -96,6 +96,7 @@ def nii_jpg(inputfile, outputfile, type):
     total_slices = image_array.shape[2]
     mid_slice = total_slices//2
     data = image_array[:, :, mid_slice]
+    data = adjust_gamma(data)
     image_name = f"{type}.jpg"
     imageio.imwrite(image_name, data)
     src = image_name
@@ -157,7 +158,7 @@ def get_folder_name(path):
     return path.split("/")[-2]
 
 
-def postprocess(path, type, Dimension_Check=True, Feature_Selection=True, Structural_Similarity=True):
+def postprocess_file(path, type, Dimension_Check=True, Feature_Selection=True, Structural_Similarity=True):
     print("\n-------------------POSTPROCESS STARTED--------------------\n")
     if(Dimension_Check):
         return dimension_check(path, type)
@@ -174,7 +175,7 @@ def postprocess(key, sub_scan):
     mri_path = scan['mri.nii']
     pet_path = scan['pet.nii']
 
-    # make_dir(POSTPROCESS_TEMP_PATHS)
+    make_dir(POSTPROCESS_TEMP_PATHS)
 
     show_data("path", [mri_path, pet_path])
 
@@ -183,23 +184,23 @@ def postprocess(key, sub_scan):
     Feature_Selection = True
     Structural_Similarity = True
 
-    if(not postprocess(mri_path, "mri", Dimension_Check=Dimension_Check, Feature_Selection=Feature_Selection, Structural_Similarity=Structural_Similarity)):
+    if(not postprocess_file(mri_path, "mri", Dimension_Check=Dimension_Check, Feature_Selection=Feature_Selection, Structural_Similarity=Structural_Similarity)):
         return False
 
-    if(not postprocess(pet_path, "pet", Dimension_Check=Dimension_Check, Feature_Selection=Feature_Selection, Structural_Similarity=Structural_Similarity)):
+    if(not postprocess_file(pet_path, "pet", Dimension_Check=Dimension_Check, Feature_Selection=Feature_Selection, Structural_Similarity=Structural_Similarity)):
         return False
 
     df = df.append({'subject_id':scan, 'mse':MEAN_MSE, 'ssim':MEAN_SSIM, 'distance':MEAN_DIST},ignore_index=True)
 
-    # make_dir([f"{POSTPROCESS}/{key}"])
-    # make_dir([f"{POSTPROCESS}/{key}/img"])
+    make_dir([f"{POSTPROCESS}/{key}"])
+    make_dir([f"{POSTPROCESS}/{key}/img"])
 
     # shutil.copyfile(mri_path, f"{POSTPROCESS}/{key}/mri.nii")
     # shutil.copyfile(pet_path, f"{POSTPROCESS}/{key}/pet.nii")
-    # shutil.copyfile(f"{SSIM}/mri.jpg", f"{POSTPROCESS}/{key}/img/mri.nii")
-    # shutil.copyfile(f"{SSIM}/pet.jpg", f"{POSTPROCESS}/{key}/img/pet.nii")
+    shutil.copyfile(f"{SSIM}/mri.jpg", f"{POSTPROCESS}/{key}/img/mri.nii")
+    shutil.copyfile(f"{SSIM}/pet.jpg", f"{POSTPROCESS}/{key}/img/pet.nii")
 
-    # remove_dir(POSTPROCESS_TEMP_PATHS)
+    remove_dir(POSTPROCESS_TEMP_PATHS)
 
 
 
