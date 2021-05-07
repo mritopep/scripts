@@ -173,16 +173,15 @@ def get_folder_name(path):
 
 
 def postprocess_file(path, type, Dimension_Check=True, Feature_Selection=True, Structural_Similarity=True):
-    status = True
     print("\n-------------------POSTPROCESS STARTED--------------------\n")
     if(Dimension_Check):
-        status = dimension_check(path, type)
+        if(not dimension_check(path, type)): return False
     if(Structural_Similarity):
-        status = structural_similarity(path, type)
+        if(not structural_similarity(path, type)): return False
     if(Feature_Selection):
-        status = feature_selection(f"{SSIM}/{type}.jpg", type)
+        if(not feature_selection(f"{SSIM}/{type}.jpg", type)): return False
     print("\n-------------------POSTPROCESS COMPELETED--------------------\n")
-    return status
+    return True
 
 
 def postprocess(key, sub_scan):
