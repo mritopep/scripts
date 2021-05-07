@@ -107,9 +107,9 @@ def nii_jpg(inputfile, outputfile, type):
 
 
 def dimension_check(path, type):
-    mri_dim = nii_dimension(path)
-    print(f"Dimension : {mri_dim}")
-    if(mri_dim[1] >= 192 and mri_dim[1] <= 256):
+    dim = nii_dimension(path)
+    print(f"Dimension : {dim}")
+    if(dim[1] >= 192 and dim[1] <= 256):
         return True
     return False
 
@@ -126,6 +126,7 @@ def structural_similarity(path, type):
     total_ssim = 0
     for file in files:
         mse, ssim = compare_images(file ,f"{SSIM}/{type}.jpg")
+        print(f"mse : {mse} ssim: {ssim}")
         total_mse += mse
         total_ssim += ssim
     mean_mse = total_mse//36
@@ -148,6 +149,7 @@ def feature_selection(path, type):
     for file in files:
         base_image = get_image_features(file)
         dist = np.linalg.norm(base_image-test_image)
+        print(f"distance : {dist}")
         total_distance += dist
     mean_distance = total_distance//36
     MEAN_DIST = mean_distance
@@ -188,9 +190,10 @@ def postprocess(key, sub_scan):
     if(not postprocess_file(mri_path, "mri", Dimension_Check=Dimension_Check, Feature_Selection=Feature_Selection, Structural_Similarity=Structural_Similarity)):
         return False
 
-    if(not postprocess_file(pet_path, "pet", Dimension_Check=Dimension_Check, Feature_Selection=Feature_Selection, Structural_Similarity=Structural_Similarity)):
-        return False
+    # if(not postprocess_file(pet_path, "pet", Dimension_Check=Dimension_Check, Feature_Selection=Feature_Selection, Structural_Similarity=Structural_Similarity)):
+    #     return False
 
+    print({'subject_id':scan, 'mse':MEAN_MSE, 'ssim':MEAN_SSIM, 'distance':MEAN_DIST})
     df = df.append({'subject_id':scan, 'mse':MEAN_MSE, 'ssim':MEAN_SSIM, 'distance':MEAN_DIST},ignore_index=True)
 
     make_dir([f"{POSTPROCESS}/{key}"])
