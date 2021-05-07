@@ -34,7 +34,6 @@ MEAN_SSIM = 0
 MEAN_MSE = 0
 MEAN_DIST = 0
 
-
 def nii_dimension(file):
     data = np.asarray(nibabel.load(file).dataobj).T
     row = data.shape[1]
@@ -105,6 +104,7 @@ def nii_jpg(inputfile, outputfile, type):
     img = adjust_gamma(img)
     cv2.imwrite(image_name, img)
     src = image_name
+    os.remove(outputfile+"/"+image_name)
     shutil.move(src, outputfile)
     print("Slice Saved")
 
@@ -124,20 +124,22 @@ def structural_similarity(path, type):
         slice_path = MRI_SLICE
     else:
         slice_path = PET_SLICE
-    print(slice_path)
     nii_jpg(path, SSIM, type)
-    files = [f for f in os.listdir(slice_path) if os.path.isfile(
-        os.path.join(slice_path, f))]
-    print(files)
     total_mse = 0
     total_ssim = 0
-    for file in files:
-        mse, ssim = compare_images(file, f"{SSIM}/{type}.jpg")
-        print(f"mse : {mse} ssim: {ssim}")
+    count=0
+    for file in os.listdir(slice_path):
+        count+=1
+        path = os.path.join(slice_path, file)
+        img1 = cv2.imread(path)
+        img1 = cv2.resize(img1, (256, 256),interpolation = cv2.INTER_NEAREST)
+        img2 = cv2.imread(f"{SSIM}/{type}.jpg")
+        img2 = cv2.resize(img2, (256, 256),interpolation = cv2.INTER_NEAREST)
+        mse, ssim = compare_images(img1, img2)
         total_mse += mse
         total_ssim += ssim
-    mean_mse = total_mse//36
-    mean_ssim = total_ssim//36
+    mean_mse = total_mse//count
+    mean_ssim = total_ssim//count
     MEAN_MSE = mean_mse
     MEAN_SSIM = mean_ssim
     print(f"Mean SSIM: {mean_ssim} Mean MSE: {mean_mse}")
@@ -151,17 +153,16 @@ def feature_selection(path, type):
     else:
         slice_path = PET_SLICE
     print(slice_path)
-    files = [f for f in os.listdir(slice_path) if os.path.isfile(
-        os.path.join(slice_path, f))]
-    print(files)
     test_image = get_image_features(path)
     total_distance = 0
-    for file in files:
-        base_image = get_image_features(file)
+    count=0
+    for file in os.listdir(slice_path):
+        count+=1
+        path = os.path.join(slice_path, file)
+        base_image = get_image_features(path)
         dist = np.linalg.norm(base_image-test_image)
-        print(f"distance : {dist}")
         total_distance += dist
-    mean_distance = total_distance//36
+    mean_distance = total_distance//count
     MEAN_DIST = mean_distance
     print(f"Mean distance : {mean_distance}")
     return True
@@ -179,7 +180,7 @@ def postprocess_file(path, type, Dimension_Check=True, Feature_Selection=True, S
     if(Structural_Similarity):
         status = structural_similarity(path, type)
     if(Feature_Selection):
-        status = feature_selection(path, type)
+        status = feature_selection(f"{SSIM}/{type}.jpg", type)
     print("\n-------------------POSTPROCESS COMPELETED--------------------\n")
     return status
 
@@ -203,6 +204,7 @@ def postprocess(key, sub_scan):
 
     # if(not postprocess_file(pet_path, "pet", Dimension_Check=Dimension_Check, Feature_Selection=Feature_Selection, Structural_Similarity=Structural_Similarity)):
     #     return False
+
     global MEAN_MSE, MEAN_SSIM, MEAN_DIST
     print({'subject_id': scan, 'mse': MEAN_MSE,
           'ssim': MEAN_SSIM, 'distance': MEAN_DIST})
@@ -216,7 +218,7 @@ def postprocess(key, sub_scan):
     # shutil.copyfile(mri_path, f"{POSTPROCESS}/{key}/mri.nii")
     # shutil.copyfile(pet_path, f"{POSTPROCESS}/{key}/pet.nii")
     shutil.copyfile(f"{SSIM}/mri.jpg", f"{POSTPROCESS}/{key}/img/mri.nii")
-    shutil.copyfile(f"{SSIM}/pet.jpg", f"{POSTPROCESS}/{key}/img/pet.nii")
+    # shutil.copyfile(f"{SSIM}/pet.jpg", f"{POSTPROCESS}/{key}/img/pet.nii")
 
     remove_dir(POSTPROCESS_TEMP_PATHS)
 
