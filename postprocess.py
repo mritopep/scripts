@@ -34,6 +34,7 @@ MEAN_SSIM = 0
 MEAN_MSE = 0
 MEAN_DIST = 0
 
+
 def nii_dimension(file):
     data = np.asarray(nibabel.load(file).dataobj).T
     row = data.shape[1]
@@ -93,16 +94,16 @@ def adjust_gamma(image, gamma=0.15):
 
 def nii_jpg(inputfile, outputfile, type):
     print("Saving slice")
-    print(inputfile,outputfile,type)
+    print(inputfile, outputfile, type)
     image_array = nibabel.load(inputfile).get_fdata()
     total_slices = image_array.shape[2]
     mid_slice = total_slices//2
     data = image_array[:, :, mid_slice]
     image_name = f"{type}.jpg"
     imageio.imwrite(image_name, data)
-    img = cv2.imread(image_name,0)
+    img = cv2.imread(image_name, 0)
     img = adjust_gamma(img)
-    cv2.imwrite(image_name,img)
+    cv2.imwrite(image_name, img)
     src = image_name
     shutil.move(src, outputfile)
     print("Slice Saved")
@@ -131,7 +132,7 @@ def structural_similarity(path, type):
     total_mse = 0
     total_ssim = 0
     for file in files:
-        mse, ssim = compare_images(file ,f"{SSIM}/{type}.jpg")
+        mse, ssim = compare_images(file, f"{SSIM}/{type}.jpg")
         print(f"mse : {mse} ssim: {ssim}")
         total_mse += mse
         total_ssim += ssim
@@ -171,15 +172,16 @@ def get_folder_name(path):
 
 
 def postprocess_file(path, type, Dimension_Check=True, Feature_Selection=True, Structural_Similarity=True):
+    status = True
     print("\n-------------------POSTPROCESS STARTED--------------------\n")
     if(Dimension_Check):
-        return dimension_check(path, type)
+        status = dimension_check(path, type)
     if(Structural_Similarity):
-        return structural_similarity(path, type)
+        status = structural_similarity(path, type)
     if(Feature_Selection):
-        return feature_selection(path, type)
+        status = feature_selection(path, type)
     print("\n-------------------POSTPROCESS COMPELETED--------------------\n")
-    return True
+    return status
 
 
 def postprocess(key, sub_scan):
@@ -202,9 +204,11 @@ def postprocess(key, sub_scan):
     # if(not postprocess_file(pet_path, "pet", Dimension_Check=Dimension_Check, Feature_Selection=Feature_Selection, Structural_Similarity=Structural_Similarity)):
     #     return False
     global MEAN_MSE, MEAN_SSIM, MEAN_DIST
-    print({'subject_id':scan, 'mse':MEAN_MSE, 'ssim':MEAN_SSIM, 'distance':MEAN_DIST})
+    print({'subject_id': scan, 'mse': MEAN_MSE,
+          'ssim': MEAN_SSIM, 'distance': MEAN_DIST})
     global df
-    df.append({'subject_id':scan, 'mse':MEAN_MSE, 'ssim':MEAN_SSIM, 'distance':MEAN_DIST},ignore_index=True)
+    df.append({'subject_id': scan, 'mse': MEAN_MSE, 'ssim': MEAN_SSIM,
+              'distance': MEAN_DIST}, ignore_index=True)
 
     make_dir([f"{POSTPROCESS}/{key}"])
     make_dir([f"{POSTPROCESS}/{key}/img"])
@@ -215,8 +219,6 @@ def postprocess(key, sub_scan):
     shutil.copyfile(f"{SSIM}/pet.jpg", f"{POSTPROCESS}/{key}/img/pet.nii")
 
     remove_dir(POSTPROCESS_TEMP_PATHS)
-
-
 
 
 def driver(extracted_files, src_name):
