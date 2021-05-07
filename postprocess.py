@@ -261,8 +261,8 @@ def post_preprocess():
         print(f"\n{src_name.upper()} ZIPPING\n")
         make_archive(f"{POSTPROCESS}", f"{ZIPPED}/{dest_name}.zip")
 
-    print("REMOVING")
-    shutil.rmtree(f"{POSTPROCESS}")
+    # print("REMOVING")
+    # shutil.rmtree(f"{POSTPROCESS}")
     df.to_csv(os.path.join('postprocess.csv'))
 
 
