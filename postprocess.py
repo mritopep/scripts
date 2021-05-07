@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import nibabel
 import os
 from skimage.metrics import structural_similarity as ssim
@@ -9,12 +10,29 @@ from PIL import Image
 from paths import *
 import shutil
 import imageio
+from tensorflow.keras.applications import VGG16
+from tensorflow.keras.applications.vgg16 import preprocess_input
+from tensorflow.keras.preprocessing.image import img_to_array
+from tensorflow.keras.preprocessing.image import load_img
+from tensorflow.keras.models import Sequential
 
 # import
 from get_data import extract, get_nii
 from general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress, make_archive, get_assigned
 from paths import *
 
+print("loading model")
+model = VGG16(weights="imagenet", include_top=True)
+# eliminating the last layer of VGG16- 4096 features
+cust_model = Sequential()
+for layer in model.layers[:-1]:  # excluding last layer
+    cust_model.add(layer)
+
+df = pd.DataFrame(columns=['subject_id', 'mse', 'ssim', 'distance'])
+
+MEAN_SSIM = 0
+MEAN_MSE = 0
+MEAN_DIST = 0
 
 def nii_dimension(file):
     data = np.asarray(nibabel.load(file).dataobj).T
@@ -55,42 +73,85 @@ def extract_images(output_folder):
     return [upper_img, mid_img, lower_img]
 
 
+def get_image_features(image_file_name):
+    image = load_img(image_file_name, target_size=(224, 224))
+    image = img_to_array(image)
+    image = np.expand_dims(image, axis=0)
+    image = preprocess_input(image)
+    features = cust_model.predict(image)
+    return features
+
+
 def adjust_gamma(image, gamma=0.15):
+    gamma = 0.15
     invGamma = 1.0 / gamma
     table = np.array([((i / 255.0) ** invGamma) * 255
                       for i in np.arange(0, 256)]).astype("uint8")
-    return cv2.LUT(image, table)
+    image = cv2.LUT(image, table).astype(np.uint8)
+    return image
 
-def nii_jpg(inputfile, outputfile):
+
+def nii_jpg(inputfile, outputfile, type):
     image_array = nibabel.load(inputfile).get_fdata()
     total_slices = image_array.shape[2]
     mid_slice = total_slices//2
     data = image_array[:, :, mid_slice]
-    image_name = "slice.jpg"
+    image_name = f"{type}.jpg"
     imageio.imwrite(image_name, data)
     src = image_name
     shutil.move(src, outputfile)
     print("Slice Saved")
 
+
 def dimension_check(path, type):
     mri_dim = nii_dimension(path)
+    print(f"Dimension : {mri_dim}")
     if(mri_dim[1] >= 192 and mri_dim[1] <= 256):
         return True
     return False
 
+
 def structural_similarity(path, type):
-    nii_jpg(path, f"{SSIM}/{type}")
-    files = [f for f in os.listdir(MRI_SLICE) if os.path.isfile(os.path.join(MRI_SLICE, f))]
+    if type == "mri":
+        slice_path = MRI_SLICE
+    else:
+        slice_path = PET_SLICE
+    nii_jpg(path, SSIM, type)
+    files = [f for f in os.listdir(slice_path) if os.path.isfile(
+        os.path.join(slice_path, f))]
     total_mse = 0
     total_ssim = 0
     for file in files:
-        mse,ssim = compare_images(file, f"{SSIM}/{type}/slice.jpg")
+        mse, ssim = compare_images(adjust_gamma(
+            file), adjust_gamma(f"{SSIM}/{type}.jpg"))
         total_mse += mse
         total_ssim += ssim
     mean_mse = total_mse//36
     mean_ssim = total_ssim//36
+    MEAN_MSE = mean_mse
+    MEAN_SSIM = mean_ssim
     print(f"Mean SSIM: {mean_ssim} Mean MSE: {mean_mse}")
     return True
+
+
+def feature_selection(path, type):
+    if type == "mri":
+        slice_path = MRI_SLICE
+    else:
+        slice_path = PET_SLICE
+    files = [f for f in os.listdir(slice_path) if os.path.isfile(
+        os.path.join(slice_path, f))]
+    test_image = get_image_features(path)
+    total_distance = 0
+    for file in files:
+        base_image = get_image_features(file)
+        dist = np.linalg.norm(base_image-test_image)
+        total_distance += dist
+    mean_distance = total_distance//36
+    MEAN_DIST = mean_distance
+    print(f"Mean distance : {mean_distance}")
+    return True
+
 
 def get_folder_name(path):
     return path.split("/")[-2]
@@ -113,7 +174,7 @@ def postprocess(key, sub_scan):
     mri_path = scan['mri.nii']
     pet_path = scan['pet.nii']
 
-    make_dir(POSTPROCESS_TEMP_PATHS)
+    # make_dir(POSTPROCESS_TEMP_PATHS)
 
     show_data("path", [mri_path, pet_path])
 
@@ -128,12 +189,19 @@ def postprocess(key, sub_scan):
     if(not postprocess(pet_path, "pet", Dimension_Check=Dimension_Check, Feature_Selection=Feature_Selection, Structural_Similarity=Structural_Similarity)):
         return False
 
-    make_dir([f"{POSTPROCESS}/{key}"])
+    df = df.append({'subject_id':scan, 'mse':MEAN_MSE, 'ssim':MEAN_SSIM, 'distance':MEAN_DIST},ignore_index=True)
 
-    shutil.copyfile(mri_path, f"{POSTPROCESS}/{key}/mri.nii")
-    shutil.copyfile(pet_path, f"{POSTPROCESS}/{key}/pet.nii")
+    # make_dir([f"{POSTPROCESS}/{key}"])
+    # make_dir([f"{POSTPROCESS}/{key}/img"])
 
-    remove_dir(POSTPROCESS_TEMP_PATHS)
+    # shutil.copyfile(mri_path, f"{POSTPROCESS}/{key}/mri.nii")
+    # shutil.copyfile(pet_path, f"{POSTPROCESS}/{key}/pet.nii")
+    # shutil.copyfile(f"{SSIM}/mri.jpg", f"{POSTPROCESS}/{key}/img/mri.nii")
+    # shutil.copyfile(f"{SSIM}/pet.jpg", f"{POSTPROCESS}/{key}/img/pet.nii")
+
+    # remove_dir(POSTPROCESS_TEMP_PATHS)
+
+
 
 
 def driver(extracted_files, src_name):
@@ -195,6 +263,7 @@ def post_preprocess():
 
     print("REMOVING")
     shutil.rmtree(f"{POSTPROCESS}")
+    df.to_csv(os.path.join('postprocess.csv'))
 
 
 if __name__ == "__main__":
