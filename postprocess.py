@@ -96,9 +96,11 @@ def nii_jpg(inputfile, outputfile, type):
     total_slices = image_array.shape[2]
     mid_slice = total_slices//2
     data = image_array[:, :, mid_slice]
-    data = adjust_gamma(data)
     image_name = f"{type}.jpg"
     imageio.imwrite(image_name, data)
+    img = cv2.imread(image_name,0)
+    img = adjust_gamma(img)
+    cv2.imwrite(image_name,img)
     src = image_name
     shutil.move(src, outputfile)
     print("Slice Saved")
@@ -123,8 +125,7 @@ def structural_similarity(path, type):
     total_mse = 0
     total_ssim = 0
     for file in files:
-        mse, ssim = compare_images(adjust_gamma(
-            file), adjust_gamma(f"{SSIM}/{type}.jpg"))
+        mse, ssim = compare_images(file ,f"{SSIM}/{type}.jpg")
         total_mse += mse
         total_ssim += ssim
     mean_mse = total_mse//36
