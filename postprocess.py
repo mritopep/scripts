@@ -92,6 +92,8 @@ def adjust_gamma(image, gamma=0.15):
 
 
 def nii_jpg(inputfile, outputfile, type):
+    print("Saving slice")
+    print(inputfile,outputfile,type)
     image_array = nibabel.load(inputfile).get_fdata()
     total_slices = image_array.shape[2]
     mid_slice = total_slices//2
@@ -107,6 +109,7 @@ def nii_jpg(inputfile, outputfile, type):
 
 
 def dimension_check(path, type):
+    print("\nDIMENSION CHECK\n")
     dim = nii_dimension(path)
     print(f"Dimension : {dim}")
     if(dim[1] >= 192 and dim[1] <= 256):
@@ -115,13 +118,16 @@ def dimension_check(path, type):
 
 
 def structural_similarity(path, type):
+    print("\nSTRUCTURAL SIMILARITY\n")
     if type == "mri":
         slice_path = MRI_SLICE
     else:
         slice_path = PET_SLICE
+    print(slice_path)
     nii_jpg(path, SSIM, type)
     files = [f for f in os.listdir(slice_path) if os.path.isfile(
         os.path.join(slice_path, f))]
+    print(files)
     total_mse = 0
     total_ssim = 0
     for file in files:
@@ -138,12 +144,15 @@ def structural_similarity(path, type):
 
 
 def feature_selection(path, type):
+    print("\nFEATURE SELECTION\n")
     if type == "mri":
         slice_path = MRI_SLICE
     else:
         slice_path = PET_SLICE
+    print(slice_path)
     files = [f for f in os.listdir(slice_path) if os.path.isfile(
         os.path.join(slice_path, f))]
+    print(files)
     test_image = get_image_features(path)
     total_distance = 0
     for file in files:
