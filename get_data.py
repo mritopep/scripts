@@ -136,4 +136,4 @@ def get_assigned_files(name):
 
 if __name__ == "__main__":
     print("\nDOWNLOAD DATA\n")
-    get_assigned_files("filtered_adni")
+    get_assigned_files("postprocessed_adni")
