@@ -1,3 +1,4 @@
+#!/bin/bash
 source /work/miniconda/etc/profile.d/conda.sh &> ./logs/null.txt
 conda init bash &> ./logs/null.txt
 conda activate denoise &> ./logs/null.txt

@@ -1,4 +1,4 @@
-#!/work/miniconda/bin/python
+#!/home/miniconda/bin/python
 import numpy as np
 import nibabel
 from scipy import ndimage

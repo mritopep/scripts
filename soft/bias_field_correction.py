@@ -1,4 +1,4 @@
-#!/work/miniconda/bin/python
+#!/home/miniconda/bin/python
 from __future__ import print_function
 
 import SimpleITK as sitk

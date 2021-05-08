@@ -1,4 +1,4 @@
-#!/work/miniconda/bin/python
+#!/home/miniconda/bin/python
 import SimpleITK as sitk
 import os
 import sys
