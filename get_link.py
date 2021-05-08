@@ -51,6 +51,8 @@ def match_file_name(file_name, data_name):
         return True
     if(file_name.find("preprocessed_adni") != -1 and data_name == "preprocessed_adni"):
         return True
+    if(file_name.find("postprocessed_adni") != -1 and data_name == "postprocessed_adni"):
+        return True
     return False
 
 
