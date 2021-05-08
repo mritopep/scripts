@@ -188,7 +188,7 @@ def driver_stup():
     file_path = f"{DOWNLOAD}/{file_name}"
     file = {"name": file_name, "path": file_path}
     extracted_paths = extract([file])
-    extracted_files = get_nii_files(extracted_paths)
+    extracted_files = get_nii(extracted_paths)
     for i in extracted_files:
         folder = get_folder_name(i['path'])
         if(folder not in sub_scan.keys()):
