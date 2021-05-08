@@ -2,9 +2,8 @@ import os
 import pickle
 import gzip
 import shutil
-
+from zipfile import ZipFile
 from paths import *
-
 
 def upzip_gz(input, output):
     with gzip.open(input, 'rb') as f_in:
@@ -105,3 +104,49 @@ def get_assigned():
         return ["filtered_adni_10.zip", "filtered_adni_11.zip"]
     else:
         return ['filtered_adni_1.zip', 'filtered_adni_2.zip', 'filtered_adni_3.zip', 'filtered_adni_4.zip', 'filtered_adni_5.zip', 'filtered_adni_6.zip', 'filtered_adni_7.zip', 'filtered_adni_8.zip', 'filtered_adni_9.zip', 'filtered_adni_10.zip', 'filtered_adni_11.zip']
+
+def divide(name, path, parts):
+    print("\nDIVIDING FILES\n")
+    divided_dirs = []
+    dirs = []
+
+    dir_list = os.listdir(path)
+    num_dir = len(dir_list)
+    div = int(num_dir/parts)
+
+    for i in range(1, num_dir+1):
+        if(i % div == 0):
+            dirs.append(dir_list[i-1])
+            divided_dirs.append(dirs)
+            dirs = []
+        else:
+            dirs.append(dir_list[i-1])
+
+    if(dirs not in divided_dirs and len(dirs) != 0):
+        divided_dirs.append(dirs)
+
+    dir_count = 0
+    file_count = 0
+    for divide in divided_dirs:
+        dir_count += 1
+        for folder in divide:
+            file_count += 1
+
+    print(f"\nDIR COUNT:{dir_count} FILE COUNT: {file_count}\n")
+
+    count = 0
+
+    for divide in divided_dirs:
+        os.makedirs(f"{path}/{name}")
+        divided_file_paths = []
+        count += 1
+        for folder in divide:
+            dest_directory = f"{path}/{name}/{folder}"
+            src_directory = f"{path}/{folder}"
+            os.makedirs(dest_directory)
+            shutil.move(f"{src_directory}/mri.nii",
+                            f"{dest_directory}/mri.nii")
+            shutil.move(f"{src_directory}/pet.nii",
+                            f"{dest_directory}/pet.nii")
+            shutil.rmtree(src_directory)
+        update_progress(count, file_count)
