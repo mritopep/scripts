@@ -277,4 +277,4 @@ if __name__ == "__main__":
     # Testing
     # stub()
     # Process
-    process_extracted_data()
+    process_downloaded_data()
