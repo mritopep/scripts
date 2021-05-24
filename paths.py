@@ -28,10 +28,10 @@ BAIS_COR = f'{DATA}/temp/bias_cor'
 TEMP_OUTPUT = f'{DATA}/temp/output'
 
 # Postprocess Temp
-SSIM = f'{DATA}/temp/ssim'
-FEATURE = f'{DATA}/temp/feature_selection'
-MRI_SLICE = "/content/drive/MyDrive/slice/adni_MRI"
-PET_SLICE = "/content/drive/MyDrive/slice/adni_PET"
+IMG1_MRI = f'{DATA}/temp/img1/mri'
+IMG1_PET = f'{DATA}/temp/img1/pet'
+IMG2_MRI = f'{DATA}/temp/img2/mri'
+IMG2_PET = f'{DATA}/temp/img2/pet'
 
 # Shell Scripts
 SHELL = f"{SCRIPT}/shell_scripts"
@@ -40,5 +40,5 @@ SHELL = f"{SCRIPT}/shell_scripts"
 DATA_PATHS = [DOWNLOAD, ADNI, CANCER, EXTRACT, METADATA_ADNI,
               METADATA_CANCER, DIVIDE, PREPROCESSED, ZIPPED, PICKLE,FILTERED]
 TEMP_PATHS = [SKULL_STRIP, IMG_REG, DENOISE, PETPVC, BAIS_COR, TEMP_OUTPUT]
+POSTPROCESS_TEMP_PATHS = [IMG1_MRI, IMG1_PET, IMG2_MRI, IMG2_PET]
 SCRIPT_PATHS = []
-POSTPROCESS_TEMP_PATHS = [SSIM, FEATURE]

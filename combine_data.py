@@ -35,9 +35,6 @@ def make_struct():
     files = get_nii(EXTRACT)
     for file in files:
         make_dir(file)
-    dirs = os.listdir(EXTRACT)
-    for dir in dirs:
-      shutil.rmtree(dir)
   
 def get_xml_files(extracted_paths):
     print("\n GETTING XML FILE\n")
@@ -54,18 +51,11 @@ def get_xml_files(extracted_paths):
 
 def copy_metadata(files,path):
     for file in files:
-        shutil.copyfile(file["path"], f"{path}/{file["name"]}")
-        os.remove(file["path"])
+        move(file["path"], f"{path}/{file['name']}")
 
 def move_xml():
   files = get_xml_files(EXTRACT)
   copy_metadata(files,METADATA_ADNI)
-  dirs = os.listdir(EXTRACT)
-    for dir in dirs:
-      shutil.rmtree(dir)
 
 if __name__ == "__main__":
-  make_dir(DATA_PATHS)
-  make_dir(SCRIPT_PATHS)
-  make_struct()
   move_xml()

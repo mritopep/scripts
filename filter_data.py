@@ -3,11 +3,11 @@ import xml.etree.ElementTree as ET
 from datetime import date
 from shutil import copyfile
 import shutil
+import numpy as np
+import nibabel
 
-from general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress, make_archive, get_assigned
+from general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress, make_archive
 from paths import *
-
-metadata=get_metadata(METADATA_ADNI)
 
 def nii_dimension(file):
     data = np.asarray(nibabel.load(file).dataobj).T
@@ -16,9 +16,13 @@ def nii_dimension(file):
     return [row, col]
 
 def dimension_check(path):
-    dim = nii_dimension(path)
-    if(dim[1] >= 192 and dim[1] <= 256):
-        return True
+    try:
+      dim = nii_dimension(path)
+      if(dim[1] >= 192 and dim[1] <= 256):
+          return True
+    except:
+      return False
+
     return False   
 
 def get_metadata(dataset):
@@ -62,6 +66,8 @@ def get_diff(mri_date,pet_date):
     diff = abs(d1 - d0)
     return diff.days
 
+metadata=get_metadata(METADATA_ADNI)
+
 def pair_scan_images(MR,PT):
     print("\nPAIR SCANS\n")
     pair_data=[]
@@ -70,7 +76,6 @@ def pair_scan_images(MR,PT):
     for pet in PT:
         if(not dimension_check(pet)):
             continue
-        used_mri =[]
         for mri in MR:
             if(not dimension_check(mri)):
                 continue
@@ -89,19 +94,29 @@ def filter(remove_files=False):
     subject_ids=os.listdir(ADNI)
     pair_datas=[]
     for id in subject_ids:
+
         mri=[]
         pet=[]
 
-        for file in os.listdir(f"{ADNI}/{id}/MR"):
+        try:
+            files = os.listdir(f"{ADNI}/{id}/MR")
+        except:
+            continue
+
+        for file in files:
             mri.append(f"{ADNI}/{id}/MR/{file}")
 
-        for file in os.listdir(f"{ADNI}/{id}/PT"):
+        try:
+            files = os.listdir(f"{ADNI}/{id}/PT")
+        except:
+            continue
+
+        for file in files:
             pet.append(f"{ADNI}/{id}/PT/{file}")
 
-        if(remove_files):
-            if(len(mri) == 0 or len(pet) == 0):
-                shutil.rmtree(f"{ADNI}{id}")
-                continue
+        if(len(mri) == 0 or len(pet) == 0):
+            shutil.rmtree(f"{ADNI}/{id}")
+            continue
         
         pair_data = pair_scan_images(mri,pet)
         pair_datas.extend(pair_data)
@@ -111,20 +126,20 @@ def filter(remove_files=False):
         print(f"MRI NUM: {len(mri)}")       
         print(f"PAIR DATA NUM: {len(pair_data)}")
 
-        # count=0
-        # for pair in pair_data:
-        #     count+=1
-        #     loc=f"{FILTERED}/{id}_{count}"
-        #     if(os.path.isdir(loc)==False):
-        #       try:  
-        #         os.makedirs(loc) 
-        #       except OSError as error:  
-        #           print(error) 
-        #     copyfile(pair["mr"], loc+"/mri.nii")
-        #     copyfile(pair["pt"], loc+"/pet.nii")
+        count=0
+        for pair in pair_data:
+            count+=1
+            loc=f"{FILTERED}/{id}_{count}"
+            if(os.path.isdir(loc)==False):
+              try:  
+                os.makedirs(loc) 
+              except OSError as error:  
+                  print(error) 
+            copyfile(pair["mr"], loc+"/mri.nii")
+            copyfile(pair["pt"], loc+"/pet.nii")
         
-        # if(remove_files):
-        #     shutil.rmtree(f"{ADNI}/{id}")
+        if(remove_files):
+            shutil.rmtree(f"{ADNI}/{id}")
         
     print(f"PAIR DATAS NUM: {len(pair_datas)}")
 
@@ -132,4 +147,4 @@ def filter(remove_files=False):
 if __name__ == "__main__":
     make_dir(DATA_PATHS)
     make_dir(SCRIPT_PATHS)
-    filter()
+    filter(remove_files=True)
