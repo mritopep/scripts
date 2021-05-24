@@ -308,5 +308,7 @@ def post_preprocess():
     # shutil.rmtree(f"{POSTPROCESS}")
 
 if __name__ == "__main__":
+    make_dir(DATA_PATHS)
+    make_dir(SCRIPT_PATHS)
     df = pd.DataFrame(columns=['subject_id', 'type', 'mse', 'ssim', 'distance'])
     post_preprocess()

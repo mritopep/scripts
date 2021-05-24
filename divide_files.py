@@ -57,4 +57,6 @@ def divide(name, path, parts):
 
 
 if __name__ == "__main__":
-    divide("adni", PREPROCESSED, 10)
+    make_dir(DATA_PATHS)
+    make_dir(SCRIPT_PATHS)
+    divide("filter", FILTERED, 5)

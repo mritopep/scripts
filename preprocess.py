@@ -273,6 +273,8 @@ def process_extracted_data():
         # shutil.rmtree(f"{PREPROCESSED}/{src_name}")
 
 if __name__ == "__main__":
+    make_dir(DATA_PATHS)
+    make_dir(SCRIPT_PATHS)
     print("\nPREPROCESSING SCRIPT\n")
     # Testing
     # stub()

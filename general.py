@@ -84,27 +84,6 @@ def make_archive(source, destination):
     shutil.make_archive(name, format, archive_from, archive_to)
     shutil.move('%s.%s' % (name, format), destination)
 
-
-def cred_store():
-    print("\nMENU\n0.Whole Dataset\n1.Antony\n2.George\n3.Ashia\n4.Harishma\n")
-    n = input("Please Enter your number:")
-    store_data(n, f"{PICKLE}/cred.pkl")
-
-
-def get_assigned():
-    cred = 0
-    cred = get_data(f"{PICKLE}/cred.pkl")
-    if(cred == "1"):
-        return ["filtered_adni_1.zip", "filtered_adni_2.zip","filtered_adni_3.zip"]
-    elif(cred == "2"):
-        return ["filtered_adni_4.zip", "filtered_adni_5.zip", "filtered_adni_6.zip"]
-    elif(cred == "4"):
-        return ["filtered_adni_7.zip", "filtered_adni_8.zip", "filtered_adni_10.zip"]
-    elif(cred == "3"):
-        return ["filtered_adni_10.zip", "filtered_adni_11.zip"]
-    else:
-        return ['filtered_adni_1.zip', 'filtered_adni_2.zip', 'filtered_adni_3.zip', 'filtered_adni_4.zip', 'filtered_adni_5.zip', 'filtered_adni_6.zip', 'filtered_adni_7.zip', 'filtered_adni_8.zip', 'filtered_adni_9.zip', 'filtered_adni_10.zip', 'filtered_adni_11.zip']
-
 def divide(name, path, parts):
     print("\nDIVIDING FILES\n")
     divided_dirs = []
