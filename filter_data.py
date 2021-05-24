@@ -7,6 +7,8 @@ import shutil
 from general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress, make_archive, get_assigned
 from paths import *
 
+metadata=get_metadata(METADATA_ADNI)
+
 def get_metadata(dataset):
     xml_files={}
     for r, d, f in os.walk(dataset):
@@ -68,7 +70,6 @@ def pair_scan_images(MR,PT):
     return pair_data
 
 def filter(remove_files=False):
-    metadata=get_metadata(METADATA_ADNI)
     subject_ids=os.listdir(ADNI)
     pair_datas=[]
     for id in subject_ids:
