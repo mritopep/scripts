@@ -4,7 +4,9 @@ from shutil import move
 from os import path
 import time
 
+from paths import *
 from get_data import get_nii
+from general import make_dir
 
 def get_id_and_mod(name):
   mod=""
@@ -19,7 +21,7 @@ def get_id_and_mod(name):
 
 def make_dir(file_data):
   sub_id,mod=get_id_and_mod(file_data["name"])
-  loc=ADNI+sub_id+"/"+mod
+  loc=f"{ADNI}/{sub_id}/{mod}"
   if(path.isdir(loc)==False):
     try:  
       os.makedirs(loc) 
@@ -33,7 +35,37 @@ def make_struct():
     files = get_nii(EXTRACT)
     for file in files:
         make_dir(file)
+    dirs = os.listdir(EXTRACT)
+    for dir in dirs:
+      shutil.rmtree(dir)
   
+def get_xml_files(extracted_paths):
+    print("\n GETTING XML FILE\n")
+    xml_files=[]
+    for extract_path in extracted_paths:
+      for r, d, f in os.walk(extract_path):
+          for file in f:
+              if file.endswith(".xml") and file.startswith("ADNI"):
+                file_name=file
+                file_path=os.path.join(r, file)
+                xml_files.append({"name":file_name,"path":file_path})
+                print(f'Name:{file_name}\nPath: {file_path}')
+    return xml_files
+
+def copy_metadata(files,path):
+    for file in files:
+        shutil.copyfile(file["path"], f"{path}/{file["name"]}")
+        os.remove(file["path"])
+
+def move_xml():
+  files = get_xml_files(EXTRACT)
+  copy_metadata(files,METADATA_ADNI)
+  dirs = os.listdir(EXTRACT)
+    for dir in dirs:
+      shutil.rmtree(dir)
 
 if __name__ == "__main__":
+  make_dir(DATA_PATHS)
+  make_dir(SCRIPT_PATHS)
   make_struct()
+  move_xml()

@@ -9,7 +9,7 @@ from paths import *
 
 def get_metadata(dataset):
     xml_files={}
-    for r, d, f in os.walk(METADATA_ADNI):
+    for r, d, f in os.walk(dataset):
           for file in f:
               if file.endswith(".xml") and file.startswith("ADNI"):
                 file_path=os.path.join(r, file)
@@ -26,8 +26,6 @@ def get_xml_data(path):
     imageId=root.find("./project/subject/study/imagingProtocol/imageUID").text
     date=root.find("./project/subject/study/series/dateAcquired").text
     return [subId,seriesId,imageId,date]
-
-metadata=get_metadata("ADNI")
 
 def get_name(scan_path):
     if(scan_path.find("/PT/")!=-1):
@@ -70,7 +68,7 @@ def pair_scan_images(MR,PT):
     return pair_data
 
 def filter(remove_files=False):
-    make_dir()
+    metadata=get_metadata(METADATA_ADNI)
     subject_ids=os.listdir(ADNI)
     pair_datas=[]
     for id in subject_ids:
