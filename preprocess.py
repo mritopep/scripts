@@ -7,8 +7,9 @@ import gzip
 
 # import
 from get_data import extract, get_nii
-from general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress, make_archive, get_assigned
+from general import make_dir, get_data, store_data, remove_dir, upzip_gz, show_data, list_directory, update_progress, make_archive
 from paths import *
+
 
 def exception_handle(log_name):
     with open(f"./logs/{log_name}", "r") as log:
@@ -18,6 +19,7 @@ def exception_handle(log_name):
             return False
         print(f"\n{log_name} PASSED\n")
         return True
+
 
 def image_registration(mri_image, pet_image, output_image):
     print("\nIMAGE REGISTRATION\n")
@@ -70,7 +72,8 @@ def petpvc(input_image, output_image):
     os.system(
         f"bash {SHELL}/petpvc.sh {input_image} {output_image} {log_name}")
     return exception_handle(log_name)
-    
+
+
 def preprocess(key, src_name, sub_scan):
     scan = sub_scan[key]
 
@@ -103,7 +106,7 @@ def preprocess(key, src_name, sub_scan):
     copyfile(f"{TEMP_OUTPUT}/pet.nii",
              f"{PREPROCESSED}/{src_name}/{key}/pet.nii")
 
-    #remove_dir(TEMP_PATHS)
+    # remove_dir(TEMP_PATHS)
 
 
 def preprocess_mri(input, Intensity_Normalization=True, Skull_Strip=True, Bias_Correction=True):
@@ -124,7 +127,7 @@ def preprocess_mri(input, Intensity_Normalization=True, Skull_Strip=True, Bias_C
         else:
             return False
     copyfile(input, f"{TEMP_OUTPUT}/mri.nii")
-    print("\nTemp mri image: "+ f"{TEMP_OUTPUT}/mri.nii")
+    print("\nTemp mri image: " + f"{TEMP_OUTPUT}/mri.nii")
     print("\n-------------------MRI PREPROCESS COMPELETED--------------------\n")
     return True
 
@@ -142,7 +145,7 @@ def preprocess_pet(input, Skull_Strip=True, Petpvc=True):
         else:
             return False
     copyfile(input, f"{TEMP_OUTPUT}/pet.nii")
-    print("\nTemp pet image: "+ f"{TEMP_OUTPUT}/pet.nii")
+    print("\nTemp pet image: " + f"{TEMP_OUTPUT}/pet.nii")
     print("\n--------------------PET PREPROCESS COMPELETED--------------------\n")
     return True
 
@@ -208,28 +211,45 @@ def stub():
     make_archive(f"{PREPROCESSED}/{src_name}", f"{ZIPPED}/{dest_name}.zip")
 
 
-def process_downloaded_data():
+def process_data(downloaded=False, extracted=False, remove=False):
     nii_files = []
-    downloaded_files = []
-    assigned_files = get_assigned()
+    files = []
 
-    # Downloaded files
-    for file_name in os.listdir(DOWNLOAD):
-        file_path = f"{DOWNLOAD}/{file_name}"
-        downloaded_files.append({"name": file_name, "path": file_path})
+    if(downloaded):
+        # Downloaded files
+        downloaded_files = []
+        for file_name in os.listdir(DOWNLOAD):
+            file_path = f"{DOWNLOAD}/{file_name}"
+            downloaded_files.append({"name": file_name, "path": file_path})
+        files = downloaded_files
 
-    for file in downloaded_files:
-        if(file["name"] not in assigned_files):
-            continue
-        src_name = file['name'][:-4]
-        dest_name = src_name.replace("filtered", "preprocessed")
+    if(extracted):
+        # Extracted files
+        extracted_folders = []
+        for file_name in os.listdir(EXTRACT):
+            file_path = f"{EXTRACT}/{file_name}"
+            extracted_folders.append({"name": file_name, "path": file_path})
+        files = extracted_folders
+
+    for file in files:
+
+        src_name = file['name']
+        dest_name = src_name
+
+        if(downloaded):
+            src_name = file['name'][:-4]
+            dest_name = src_name.replace("filtered", "preprocessed")
 
         if(f"{dest_name}.zip" in os.listdir(ZIPPED)):
             continue
-        
+
         show_data("name", [src_name, dest_name])
 
-        extracted_paths = extract([file])
+        extracted_paths = file["path"]
+
+        if(downloaded):
+            extracted_paths = extract(file)
+
         extracted_files = get_nii(extracted_paths)
 
         print(f"\n{src_name.upper()} PREPROCESSING\n")
@@ -238,45 +258,14 @@ def process_downloaded_data():
         print(f"\n{src_name.upper()} ZIPPING\n")
         make_archive(f"{PREPROCESSED}/{src_name}", f"{ZIPPED}/{dest_name}.zip")
 
-        # print("REMOVING")
-        # shutil.rmtree(f"{PREPROCESSED}/{src_name}")
+        if(remove):
+            print("REMOVING")
+            shutil.rmtree(f"{PREPROCESSED}/{src_name}")
 
-def process_extracted_data():
-    nii_files = []
-    extracted_folders = []
-    assigned_files = get_assigned()
-
-    # Downloaded files
-    for file_name in os.listdir(EXTRACT):
-        file_path = f"{EXTRACT}/{file_name}"
-        extracted_folders.append({"name": file_name, "path": file_path})
-
-    for folder in extracted_folders:
-        src_name = folder['name']
-        dest_name = src_name
-
-        if(f"{dest_name}.zip" in os.listdir(ZIPPED)):
-            continue
-        
-        show_data("name", [src_name, dest_name])
-
-
-        extracted_files = get_nii([folder])
-
-        print(f"\n{src_name.upper()} PREPROCESSING\n")
-        driver(extracted_files, src_name)
-
-        print(f"\n{src_name.upper()} ZIPPING\n")
-        make_archive(f"{PREPROCESSED}/{src_name}", f"{ZIPPED}/{dest_name}.zip")
-
-        # print("REMOVING")
-        # shutil.rmtree(f"{PREPROCESSED}/{src_name}")
 
 if __name__ == "__main__":
     make_dir(DATA_PATHS)
     make_dir(SCRIPT_PATHS)
     print("\nPREPROCESSING SCRIPT\n")
-    # Testing
     # stub()
-    # Process
-    process_downloaded_data()
+    process_data(downloaded=True)
