@@ -114,4 +114,4 @@ if __name__ == "__main__":
     print("\nDOWNLOAD DATA\n")
     make_dir(DATA_PATHS)
     make_dir(SCRIPT_PATHS)
-    fetch_files("adni_data",remove_files=False,store_nii_metadata=True)
+    fetch_files("filtered_one_year_adni",remove_files=False,store_nii_metadata=True)

@@ -53,6 +53,8 @@ def match_file_name(file_name, data_name):
         return True
     if(file_name.find("postprocessed_adni") != -1 and data_name == "postprocessed_adni"):
         return True
+    if(file_name.find("filtered_one_year_adni") != -1 and data_name == "filtered_one_year_adni"):
+        return True
     return False
 
 
