@@ -240,12 +240,12 @@ def process_data(downloaded=False, extracted=False, remove=False):
 
         show_data("name", [src_name, dest_name])
 
-        extracted_paths = file["path"]
+        extracted_path = file["path"]
 
         if(downloaded):
-            extracted_paths = extract(file)
+            extracted_path = extract(src_name)
 
-        extracted_files = get_nii(extracted_paths)
+        extracted_files = get_nii(extracted_path)
 
         print(f"\n{src_name.upper()} PREPROCESSING\n")
         driver(extracted_files, src_name)
