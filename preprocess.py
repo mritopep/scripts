@@ -86,7 +86,7 @@ def preprocess(key, src_name, sub_scan):
 
     # Pipeline Configuration
     Intensity_Normalization = True
-    Skull_Strip = True
+    Skull_Strip = False
     Bias_Correction = True
     Petpvc = True
 
@@ -211,7 +211,7 @@ def stub():
     make_archive(f"{PREPROCESSED}/{src_name}", f"{ZIPPED}/{dest_name}.zip")
 
 
-def process_data(downloaded=False, extracted=False, remove=False):
+def process_data(downloaded=False, extracted=False, remove=False, tag=""):
     nii_files = []
     files = []
 
@@ -251,7 +251,7 @@ def process_data(downloaded=False, extracted=False, remove=False):
         driver(extracted_files, src_name)
 
         print(f"\n{src_name.upper()} ZIPPING\n")
-        make_archive(f"{PREPROCESSED}/{src_name}", f"{ZIPPED}/{dest_name}.zip")
+        make_archive(f"{PREPROCESSED}/{src_name}", f"{ZIPPED}/{dest_name}_{tag}.zip")
 
         if(remove):
             print("REMOVING")
@@ -263,4 +263,4 @@ if __name__ == "__main__":
     make_dir(SCRIPT_PATHS)
     print("\nPREPROCESSING SCRIPT\n")
     # stub()
-    process_data(downloaded=True)
+    process_data(downloaded=True,tag="without_ss")
