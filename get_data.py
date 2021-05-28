@@ -116,4 +116,4 @@ if __name__ == "__main__":
     print("\nDOWNLOAD DATA\n")
     make_dir(DATA_PATHS)
     make_dir(SCRIPT_PATHS)
-    fetch_files("preprocessed_data_without_ss.zip",remove_files=False,store_nii_metadata=True)
+    fetch_files("preprocessed_data_without_ss.zip",remove_files=True,store_nii_metadata=True)
