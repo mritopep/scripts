@@ -55,6 +55,10 @@ def match_file_name(file_name, data_name):
         return True
     if(file_name.find("filtered_one_year_adni") != -1 and data_name == "filtered_one_year_adni"):
         return True
+    if(file_name.find("preprocessed_data_without_ss.zip") != -1 and data_name == "preprocessed_data_without_ss.zip"):
+        return True
+    if(file_name.find("skull_stripped_filtered.zip") != -1 and data_name == "skull_stripped_filtered.zip"):
+        return True
     return False
 
 
