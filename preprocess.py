@@ -232,7 +232,7 @@ def process_data(downloaded=False, extracted=False, remove=False):
         files = extracted_folders
 
     for file in files:
-        src_name = file['name']
+        src_name = file['name'][:-4]
         dest_name = src_name.replace("filtered", "preprocessed")
 
         if(f"{dest_name}.zip" in os.listdir(ZIPPED)):

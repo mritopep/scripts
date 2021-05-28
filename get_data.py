@@ -68,7 +68,9 @@ def download(file):
 
 def extract(file_name):
     print("\nEXTRACTING FILE\n")
-    file_name_without_ext = file_name[:-4]
+    file_name_without_ext = file_name
+    if(file_name.find(".")!=-1):
+        file_name_without_ext = file_name[:-4]
     download_path = f"{DOWNLOAD}/{file_name}"
     extract_path = f"{EXTRACT}/{file_name_without_ext}"
     print(f'\nName:{file_name_without_ext}\nPath: {extract_path}\n')
